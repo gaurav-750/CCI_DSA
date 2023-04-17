@@ -64,9 +64,51 @@ public class Main {
 
 //        todo https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
 //        int[] arr = {5,7,7,8,8,10};
-        int[] arr = {1};
-        System.out.println(Arrays.toString(searchRange(arr, 1)));
+//        int[] arr = {1};
+//        System.out.println(Arrays.toString(searchRange(arr, 1)));
 
+//        todo Bubble Sort
+        int[] arr = {50, 13, -2, 0, 1};
+//        bubbleSort(arr);
+//        System.out.println(Arrays.toString(arr));
+
+//        todo Selection Sort
+        selectionSort(arr);
+        System.out.println(Arrays.toString(arr));
+
+
+    }
+
+    private static void selectionSort(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            int last = arr.length-i-1;
+//            find the maximum element in the remaining array and swap it with the element at its correct position
+            int maxIndex = findMaxValue(arr, last);
+            swap(arr, maxIndex, last);
+        }
+    }
+
+    private static int findMaxValue(int[] arr, int last){
+        int maxIndex = 0;
+        for (int i = 0; i <= last; i++) {
+            if (arr[i] > arr[maxIndex]) maxIndex = i;
+        }
+        return maxIndex;
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    private static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = n-1; i >= 0; i--) {
+            for (int j = 0; j < i; j++) {
+                if (arr[j] > arr[j+1]) swap(arr, j, j+1);
+            }
+        }
     }
 
     private static int[] searchRange(int[] arr, int x) {
