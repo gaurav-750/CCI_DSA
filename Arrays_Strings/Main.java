@@ -68,15 +68,49 @@ public class Main {
 //        System.out.println(Arrays.toString(searchRange(arr, 1)));
 
 //        todo Bubble Sort
-        int[] arr = {50, 13, -2, 0, 1};
+//        int[] arr = {50, 13, -2, 0, 1};
 //        bubbleSort(arr);
 //        System.out.println(Arrays.toString(arr));
 
 //        todo Selection Sort
-        selectionSort(arr);
+//        selectionSort(arr);
+//        System.out.println(Arrays.toString(arr));
+
+//        todo Insertion Sort:
+//        int[] arr = {5,4,3,1,2};
+//        insertionSort(arr);
+//        System.out.println(Arrays.toString(arr));
+
+//        todo Cyclic Sort:
+        int[] arr = {4,5,1,2,3};
+        cyclicSort(arr);
         System.out.println(Arrays.toString(arr));
 
 
+
+    }
+
+    private static void cyclicSort(int[] arr) {
+        int i = 0;
+        while (i < arr.length){
+            System.out.println("i = " + i);
+
+            if (arr[i] != i+1) //the element is not at its correct position
+                swap(arr, i, arr[i]-1);
+            else
+                i++;
+        }
+    }
+
+    private static void insertionSort(int[] arr) {
+        for (int i = 0; i < arr.length-1; i++) {
+            for (int j = i+1; j > 0 ; j--) {
+                if (arr[j-1] > arr[j])
+                    swap(arr, j-1, j);
+                else //that means the array is already sorted
+                    break;
+            }
+        }
     }
 
     private static void selectionSort(int[] arr) {
