@@ -1,0 +1,218 @@
+package Arrays_Strings;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+//        todo Is Unique
+//        String str = sc.nextLine();
+//        Method 1
+//        System.out.println(isUnique(str));
+//        Method 2
+//        System.out.println(isUnique2(str));
+
+//        todo Check permutation
+//        String str1 = sc.nextLine();
+//        Method 1
+//        System.out.println(checkPermutation(str, str1));
+//        Method 2
+//        System.out.println(checkPermutationOptimized(str, str1));
+
+//        todo Swapping Arrays:
+//        int[] arr = {10,20,30,40,50,60,70,80};
+//        swapArrays(arr, 0, 7);
+//        System.out.println(Arrays.toString(arr));
+
+//        todo Max Value
+//        System.out.println(findMaxValue(arr));
+
+//        todo Odd or Even (by logical operators):
+//        System.out.println(isOdd(19));
+
+//        todo Find unique elements from array:
+        int[] arr1 = {2,3,4,4,3,2,6};
+//        findUniqueElement(arr1);
+
+//        todo Linear Search
+//        System.out.println(linearSearch("Samuel", 'u'));
+
+//        todo Search in 2D array:
+        int[][] arr2D = {
+                {1,2,3},
+                {8,9,10},
+                {18,19,20}
+        };
+//        System.out.println(Arrays.toString(searchIn2D(arr2D, 10)));
+
+//        todo https://leetcode.com/problems/find-numbers-with-even-number-of-digits/
+//        int[] arr = {12,345,2,6,7896,0};
+//        System.out.println("Even digits numbers: " + findNumbers(arr));
+
+//        todo Binary Search
+        int[] arr = {16,14,12,10,8,6,4,2};
+//        System.out.println("Index: " + binarySearch(arr, 6));
+
+//        todo Order Agnostic Binary Search
+        System.out.println("Agnostic Binary Search: " + agnosticBinarySearch(arr, 6));
+
+    }
+
+    private static int agnosticBinarySearch(int[] arr, int x) {
+        int s = 0, e = arr.length-1;
+        boolean isAscending = arr[s] < arr[e];
+
+        while (s <= e){
+            int mid = (s+e)/2;
+            if (arr[mid] == x) return mid;
+
+            if (isAscending){
+                if (arr[mid] > x) e = mid-1;
+                else s = mid+1;
+            }else {
+                if (arr[mid] < x) e = mid-1;
+                else s = mid+1;
+            }
+        }
+        return -1;
+    }
+
+    private static int binarySearch(int[] arr, int x) {
+        int s = 0, e = arr.length-1;
+
+        while (s <= e){
+            int mid = (s+e)/2;
+            if (arr[mid] == x)
+                return mid;
+            else if (arr[mid] > x)
+                e = mid-1;
+            else
+                s = mid+1;
+        }
+        return -1;
+    }
+
+    private static boolean containsEven(int num) {
+        if (num == 0) return false;
+        int cnt = 0;
+        while (num > 0){
+            num /= 10;
+            cnt++;
+        }
+        return cnt % 2 == 0;
+    }
+
+    private static int findNumbers(int[] arr) {
+        int count = 0;
+        for (int num : arr){
+            if (containsEven(num))
+                count++;
+        }
+        return count;
+    }
+
+    private static int[] searchIn2D(int[][] arr2D, int x) {
+        for (int i = 0; i < arr2D.length; i++) {
+            for (int j = 0; j < arr2D[i].length; j++) {
+                if (arr2D[i][j] == x)
+                    return new int[]{i,j};
+            }
+        }
+        return new int[]{-1, -1};
+    }
+
+    private static int linearSearch(String str, char x) {
+        char[] arr = str.toCharArray();
+//        ['s', 'a', ....]
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == x)
+                return i;
+        }
+        return -1;
+    }
+
+    private static void findUniqueElement(int[] arr) {
+        int uniElem = arr[0];
+        for (int i = 1; i < arr.length; i++){
+            uniElem = uniElem ^ arr[i];
+        }
+        System.out.println("uniElem = " + uniElem);
+    }
+
+    private static boolean isOdd(int n) {
+        return (n & 1) == 1;
+    }
+
+    private static int findMaxValue(int[] arr) {
+        int maxValue = Integer.MIN_VALUE;
+        for (int elem: arr){
+            if (elem > maxValue){
+                maxValue = elem;
+            }
+        }
+        return maxValue;
+    }
+
+    private static void swapArrays(int[] arr, int i1, int i2) {
+        int temp = arr[i1];
+        arr[i1] = arr[i2];
+        arr[i2] = temp;
+    }
+
+    private static boolean checkPermutationOptimized(String str1, String str2) {
+        if (str1.length() != str2.length()) return false;
+
+        int[] charArr = new int[128]; int n = str1.length();
+        for (int i = 0; i < n; i++) {
+            charArr[str1.charAt(i)]++;
+        }
+
+        for (int i = 0; i < n; i++) {
+            charArr[str2.charAt(i)]--;
+            if (charArr[str2.charAt(i)] < 0)
+                return false;
+        }
+        return true;
+    }
+
+    private static String sortString(String s){
+        char[] temp1 = s.toCharArray();
+        Arrays.sort(temp1);
+        return new String(temp1);
+    }
+
+    private static boolean checkPermutation(String str1, String str2) {
+        if (str1.length() != str2.length()) return false;
+
+//        sort both the strings and check of they r equal:
+        return sortString(str1).equals(sortString(str2));
+    }
+
+    private static boolean isUnique2(String str) {
+        if (str.length() > 128) return false;
+        boolean[] charArr = new boolean[128];
+
+        for (int i = 0; i < str.length(); i++) {
+            char curr = str.charAt(i);
+            if (charArr[curr])
+                return false;
+            charArr[curr] = true;
+        }
+        return true;
+    }
+
+    //    Using HashMap
+    private static boolean isUnique(String str) {
+        HashMap<Character, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < str.length(); i++) {
+            System.out.println((int) str.charAt(i));
+            if (map.containsKey(str.charAt(i))){
+                return false;
+            }else {
+                map.put(str.charAt(i), 1);
+            }
+        }
+        return true;
+    }
+}
