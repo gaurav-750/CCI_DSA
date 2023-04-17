@@ -50,12 +50,59 @@ public class Main {
 //        System.out.println("Even digits numbers: " + findNumbers(arr));
 
 //        todo Binary Search
-        int[] arr = {16,14,12,10,8,6,4,2};
+//        int[] arr = {16,14,12,10,8,6,4,2};
 //        System.out.println("Index: " + binarySearch(arr, 6));
 
 //        todo Order Agnostic Binary Search
-        System.out.println("Agnostic Binary Search: " + agnosticBinarySearch(arr, 6));
+//        System.out.println("Agnostic Binary Search: " + agnosticBinarySearch(arr, 6));
 
+//        todo Ceiling and Floor of a number
+//        smallest element >= target element
+        int[] arr = {2,4,6,8,10,12,14,16};
+//        System.out.println("Ceiling: " + ceilingOfNumber(arr, 9));
+//        System.out.println("Floor: " + floorOfNumber(arr, 9));
+
+        
+
+    }
+
+    private static int floorOfNumber(int[] arr, int x) {
+        int start = 0, end = arr.length-1;
+        if (x > arr[arr.length-1]) return -1;
+
+        while (start <= end){
+            int mid = (start+end)/2;
+
+            if (arr[mid] == x){
+                return mid;
+            }else if (arr[mid] > x){
+                end = mid-1;
+            }else { // arr[mid] < x
+                start = mid+1;
+            }
+        }
+//        start > end
+        return arr[end];
+    }
+
+    private static int ceilingOfNumber(int[] arr, int x) {
+        int start = 0, end = arr.length-1;
+        if (x > arr[arr.length-1]) return -1;
+
+        while (start <= end){
+            int mid = (start+end)/2;
+
+            if (arr[mid] == x){
+                return mid;
+            }else if (arr[mid] > x){
+                end = mid-1;
+            }else { // arr[mid] < x
+                start = mid+1;
+            }
+        }
+
+//        start > end
+        return arr[start];
     }
 
     private static int agnosticBinarySearch(int[] arr, int x) {
