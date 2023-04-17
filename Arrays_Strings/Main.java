@@ -82,12 +82,74 @@ public class Main {
 //        System.out.println(Arrays.toString(arr));
 
 //        todo Cyclic Sort:
-        int[] arr = {4,5,1,2,3};
-        cyclicSort(arr);
-        System.out.println(Arrays.toString(arr));
+//        int[] arr = {4,5,1,2,3};
+//        cyclicSort(arr);
+//        System.out.println(Arrays.toString(arr));
 
+//        todo https://leetcode.com/problems/missing-number/
+//        int[] arr = {4,0,2,1};
+//        System.out.println("Missing Number: " + missingNumber(arr));
 
+//        todo https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
+//        int[] arr = {4,3,2,7,8,2,3,1};
+//        int[] arr = {1,1,2,4};
+//        System.out.println("Disappeared Numbers: " + findDisappearedNumbers(arr));
 
+//        todo https://leetcode.com/problems/find-the-duplicate-number/
+        int[] arr = {1,3,4,2,2};
+        System.out.println("Duplicate number: " + findDuplicate(arr));
+
+    }
+
+    private static int findDuplicate(int[] arr) {
+//        sort the array then traverse again and return duplicate number
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] != i+1 && arr[i] != arr[arr[i]-1])
+                swap(arr, arr[i]-1, i);
+            else
+                i++;
+        }
+
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j+1)
+                return arr[j];
+        return -1;
+    }
+
+    private static List<Integer> findDisappearedNumbers(int[] arr) {
+//        sort the array, then return traverse once again and return the list
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] != i+1 && arr[i] != arr[arr[i]-1]){
+                swap(arr, i, arr[i]-1);
+            }else {
+                i++;
+            }
+        }
+
+        List<Integer> res = new ArrayList<>();
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j+1)
+                res.add(j+1);
+        return res;
+    }
+
+    private static int missingNumber(int[] arr) {
+//        first sort the array using Cyclic Sort, then find the missing number
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] < arr.length && arr[i] != i)
+                swap(arr, i, arr[i]);
+            else
+                i++;
+        }
+
+        int missing = arr.length;
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j)
+                missing = j;
+        return missing;
     }
 
     private static void cyclicSort(int[] arr) {
