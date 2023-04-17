@@ -96,9 +96,69 @@ public class Main {
 //        System.out.println("Disappeared Numbers: " + findDisappearedNumbers(arr));
 
 //        todo https://leetcode.com/problems/find-the-duplicate-number/
-        int[] arr = {1,3,4,2,2};
-        System.out.println("Duplicate number: " + findDuplicate(arr));
+//        int[] arr = {1,3,4,2,2};
+//        System.out.println("Duplicate number: " + findDuplicate(arr));
 
+//        todo https://leetcode.com/problems/find-all-duplicates-in-an-array/
+//        int[] arr = {4,3,2,7,8,2,3,1};
+//        System.out.println(findDuplicates(arr));
+
+//        todo https://leetcode.com/problems/set-mismatch/
+//        int[] arr = {1,2,2,4};
+//        System.out.println(Arrays.toString(findErrorNums(arr)));
+
+//        todo https://leetcode.com/problems/first-missing-positive/
+//        int[] arr = {1,1};
+//        System.out.println("First missing positive: " + firstMissingPositive(arr));
+
+    }
+
+    private static int firstMissingPositive(int[] arr) {
+//        sort using Cyclic sort, range => [1,n]
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] > 0 && arr[i] <= arr.length && arr[i] != arr[arr[i]-1])
+                swap(arr, i, arr[i]-1);
+            else
+                i++;
+        }
+        System.out.println(Arrays.toString(arr));
+
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j+1)
+                return j+1;
+        return arr.length+1;
+    }
+
+    private static int[] findErrorNums(int[] arr) {
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] != i+1 && arr[i] != arr[arr[i]-1])
+                swap(arr, arr[i]-1, i);
+            else
+                i++;
+        }
+
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j+1)
+                return new int[]{arr[j], j+1};
+        return null;
+    }
+
+    private static List<Integer> findDuplicates(int[] arr) {
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] != i+1 && arr[i] != arr[arr[i]-1])
+                swap(arr, arr[i]-1, i);
+            else
+                i++;
+        }
+
+        List<Integer> res = new ArrayList<>();
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j+1)
+                res.add(arr[j]);
+        return res;
     }
 
     private static int findDuplicate(int[] arr) {
