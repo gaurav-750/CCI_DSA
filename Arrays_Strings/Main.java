@@ -58,12 +58,65 @@ public class Main {
 
 //        todo Ceiling and Floor of a number
 //        smallest element >= target element
-        int[] arr = {2,4,6,8,10,12,14,16};
+//        int[] arr = {2,4,6,8,10,12,14,16};
 //        System.out.println("Ceiling: " + ceilingOfNumber(arr, 9));
 //        System.out.println("Floor: " + floorOfNumber(arr, 9));
 
-        
+//        todo https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+//        int[] arr = {5,7,7,8,8,10};
+        int[] arr = {1};
+        System.out.println(Arrays.toString(searchRange(arr, 1)));
 
+    }
+
+    private static int[] searchRange(int[] arr, int x) {
+        if (arr.length == 0) return new int[]{-1,-1};
+
+        int floor = floor(arr, x);
+        int ceil = ceil(arr, x);
+        return new int[]{floor, ceil};
+    }
+
+    private static int ceil(int[] arr, int x) {
+        int start = 0, end = arr.length-1;
+        if (x > arr[arr.length-1]) return -1;
+        boolean isPresent = false;
+
+        while (start <= end){
+            int mid = (start+end)/2;
+
+            if (arr[mid] == x) {
+                start = mid+1;
+                isPresent = true;
+            }else if (arr[mid] < x){
+                start = mid+1;
+            }else {
+                end = mid-1;
+            }
+        }
+
+        return isPresent ? start-1 : -1;
+    }
+
+    private static int floor(int[] arr, int x) {
+        int start = 0, end = arr.length-1;
+        if (x > arr[arr.length-1]) return -1;
+        boolean isPresent = false;
+
+        while (start <= end){
+            int mid = (start+end)/2;
+
+            if (arr[mid] == x){
+                end = mid-1;
+                isPresent = true;
+            }else if (arr[mid] > x){
+                end = mid-1;
+            }else {
+                start = mid+1;
+            }
+        }
+
+        return isPresent ? end+1 : -1;
     }
 
     private static int floorOfNumber(int[] arr, int x) {
@@ -82,7 +135,7 @@ public class Main {
             }
         }
 //        start > end
-        return arr[end];
+        return end;
     }
 
     private static int ceilingOfNumber(int[] arr, int x) {
@@ -102,7 +155,7 @@ public class Main {
         }
 
 //        start > end
-        return arr[start];
+        return start;
     }
 
     private static int agnosticBinarySearch(int[] arr, int x) {
