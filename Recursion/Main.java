@@ -1,5 +1,8 @@
 package Recursion;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
 //        todo nth fibonacci number
@@ -28,6 +31,92 @@ public class Main {
 //        todo Find count of zeroes in a number
 //        countZeroes(100210);
 
+//        todo https://leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero/
+//        System.out.println("Number of steps: " + numberOfSteps(123));
+
+//        todo Check if array is sorted
+//        int[] arr = {1,2,4,5,17,9};
+//        System.out.println("Is Array Sorted: " + isArraySorted(arr, 0));
+
+//        todo Linear Search using Recursion
+//        System.out.println("Index: " + linearSearch(arr, 0, 17));
+
+//        todo Find multiple occurrences inside Array
+//        int[] arr = {1,2,5,3,4,5,5};
+//        ArrayList<Integer> list = new ArrayList<>();
+//        System.out.println("List: " + findMultipleOccurrences(arr, 0, 5, list));
+
+//        todo Pattern1
+//        pattern1(5, 0);
+//        pattern2(0, 4);
+
+
+    }
+
+    private static void pattern2(int cur, int row) {
+//        base case
+        if (cur == row) return;
+
+        for (int i = 0; i <= cur; i++) {
+            System.out.print("*" + " ");
+        }
+        System.out.println();
+        pattern2(cur+1, row);
+    }
+
+    private static void pattern1(int row, int col) {
+//        base case
+        if (row == 0) return;
+
+        if (row > col) {
+            System.out.print("*" + " ");
+            pattern1(row, col + 1);
+        }else {
+            System.out.println();
+            pattern1(row-1, 0);
+        }
+    }
+
+    private static ArrayList<Integer> findMultipleOccurrences(int[] arr, int ind, int x, ArrayList<Integer> list) {
+        System.out.println(ind + ", " + list);
+//        base case
+        if (arr.length == ind)
+            return list;
+
+        if (arr[ind] == x)
+            list.add(ind);
+
+        return findMultipleOccurrences(arr, ind+1, x, list);
+    }
+
+    private static int linearSearch(int[] arr, int ind, int x) {
+//        base case
+        if (arr.length == ind)
+            return -1;
+
+        if (arr[ind] == x) return ind;
+        return linearSearch(arr, ind+1, x);
+    }
+
+    private static boolean isArraySorted(int[] arr, int ind) {
+//        base case
+        if (arr.length-1 == ind)
+            return true;
+
+        if (arr[ind] > arr[ind+1])
+            return false;
+        return isArraySorted(arr, ind+1);
+    }
+
+    private static int numberOfSteps(int n) {
+//        base case
+        if (n == 0)
+            return 0;
+
+        if (n % 2 == 0)
+            return numberOfSteps(n/2)+1;
+        else //odd
+            return numberOfSteps(n-1)+1;
     }
 
     private static void countZeroes(int num) {
