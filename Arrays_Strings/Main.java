@@ -111,6 +111,55 @@ public class Main {
 //        int[] arr = {1,1};
 //        System.out.println("First missing positive: " + firstMissingPositive(arr));
 
+//       todo Prime numbers in the given range
+//        printPrimeNumInRange(24);
+
+//        todo nth fibonacci number
+        System.out.println("Fibonacci Number: " + fibonnaci(8));
+
+//        todo Binary search using Recursion:
+        int[] arr = {15,17,21,27,28};
+        System.out.println("BS Index: " + binarySearchRec(arr, 0, arr.length-1, 177));
+
+    }
+
+    private static int binarySearchRec(int[] arr, int s, int e, int x){
+//        base condition
+        if (s > e)
+            return -1;
+
+        int mid = (s+e)/2;
+        if (arr[mid] == x)
+            return mid;
+        else if (arr[mid] > x)
+            return binarySearchRec(arr, s, mid-1, x);
+        else
+            return binarySearchRec(arr, mid+1, e, x);
+    }
+
+    private static int fibonnaci(int num) {
+//        base condition
+        if (num == 0 || num == 1)
+            return num;
+
+        return fibonnaci(num-1) + fibonnaci(num-2);
+    }
+
+
+    private static void printPrimeNumInRange(int n){
+        for (int i = 2; i < n; i++) {
+            if (isPrime(i))
+                System.out.print(i + " ");
+        }
+    }
+
+    private static boolean isPrime(int num) {
+        double last = Math.floor(Math.sqrt(num));
+        for (double i = last; i >= 2; i--) {
+            if (num%i == 0)
+                return false;
+        }
+        return true;
     }
 
     private static int firstMissingPositive(int[] arr) {
