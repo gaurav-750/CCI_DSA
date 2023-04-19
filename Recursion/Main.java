@@ -1,7 +1,7 @@
 package Recursion;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -50,7 +50,64 @@ public class Main {
 //        pattern1(5, 0);
 //        pattern2(0, 4);
 
+//        todo bubble sort using Recursion
+        int[] arr = {4,3,2,5,1,9,8};
+//        bubbleSort(arr, 0, arr.length-1);
+//        bubbleSort2(arr, arr.length);
+//        System.out.println(Arrays.toString(arr));
 
+//        todo Selection Sort using Recursion
+        selectionSort(arr, 0);
+
+    }
+
+    private static void selectionSort(int[] arr, int start) {
+//        base case
+        if (start == arr.length-1) return;
+
+        int minIndex = getMinIndex(arr, start);
+        swap(arr, minIndex, start);
+        selectionSort(arr, start+1);
+    }
+
+    private static int getMinIndex(int[] arr, int start) {
+        int mIndex = start;
+        for (int i = start; i < arr.length; i++) {
+            if (arr[i] < arr[mIndex])
+                mIndex = i;
+        }
+        return mIndex;
+    }
+
+    private static void bubbleSort2(int[] arr, int last) {
+//        base case
+        if (last == 0) return;
+        for (int i = 0; i < last-1; i++) {
+            if (arr[i] > arr[i+1])
+                swap(arr, i, i+1);
+        }
+
+        bubbleSort2(arr, last-1);
+    }
+
+    private static void bubbleSort(int[] arr, int cur, int last) {
+//        base case
+        if (last == 0) return;
+        if (cur == last) {
+            bubbleSort(arr, 0, last - 1);
+            return;
+        }
+
+        if (arr[cur] > arr[cur+1])
+            swap(arr, cur, cur+1);
+
+        bubbleSort(arr, cur+1, last);
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 
     private static void pattern2(int cur, int row) {
