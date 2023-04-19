@@ -51,14 +51,61 @@ public class Main {
 //        pattern2(0, 4);
 
 //        todo bubble sort using Recursion
-        int[] arr = {4,3,2,5,1,9,8};
+//        int[] arr = {4,3,2,5,1,9,8};
 //        bubbleSort(arr, 0, arr.length-1);
 //        bubbleSort2(arr, arr.length);
 //        System.out.println(Arrays.toString(arr));
 
 //        todo Selection Sort using Recursion
-        selectionSort(arr, 0);
+//        selectionSort(arr, 0);
 
+//        todo Merge Sort
+        int[] arr = {8,3,4,12,5,6};
+        mergeSort(arr);
+
+
+    }
+
+    private static int[] mergeSort(int[] arr) {
+//        base case
+        if (arr.length == 1)
+            return arr;
+
+        int mid = (arr.length)/2;
+        int[] firstHalf = Arrays.copyOfRange(arr, 0, mid);
+        int[] secondHalf = Arrays.copyOfRange(arr, mid, arr.length);
+
+        int[] arr1 = mergeSort(firstHalf);
+        int[] arr2 = mergeSort(secondHalf);
+        return merge(arr1, arr2);
+    }
+
+    private static int[] merge(int[] arr1, int[] arr2) {
+        if (arr1.length == 0) return arr2;
+        if (arr2.length == 0) return arr1;
+
+        int[] arr = new int[arr1.length + arr2.length];
+        int i = 0, j = 0, k = 0;
+        while (i < arr1.length && j < arr2.length){
+           if (arr1[i] <= arr2[j]) {
+               arr[k] = arr1[i];
+               i++;
+           }else { // arr2[j] > arr1[i]
+               arr[k] = arr2[j];
+               j++;
+           }
+           k++;
+        }
+
+        while (i < arr1.length){
+            arr[k] = arr1[i];
+            k++; i++;
+        }
+        while (j < arr2.length){
+            arr[k] = arr2[j];
+            k++; j++;
+        }
+        return arr;
     }
 
     private static void selectionSort(int[] arr, int start) {
