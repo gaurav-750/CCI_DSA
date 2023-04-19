@@ -77,15 +77,38 @@ public class Main {
 //        System.out.println("Skip word: " + skipWord(str));
 
 //        todo Print Subsets of a String
-        String str = "abc";
-        ArrayList<String> list = new ArrayList<>();
-        subsets(str, "", list);
-        System.out.println("list: "+ list);
+//        String str = "abc";
+//        ArrayList<String> list = new ArrayList<>();
+//        System.out.println("List: " + subsets(str, "", list));
 
+//        todo Permutations of string
+        String str = "abc";
+        permutations(str, "");
+
+//        todo https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+//        String digits = "23";
+//        letterCombinations(digits);
 
     }
 
-//    Take it (or) Leave it
+//    private static void letterCombinations(String digits) {
+//
+//    }
+
+    private static void permutations(String str, String output) {
+//        base case
+        if (str.isEmpty()){
+            System.out.println(output);
+            return;
+        }
+
+        for (int i = 0; i < str.length(); i++) {
+            String newStr = str.substring(0, i) + str.substring(i+1);
+            permutations(newStr , output+str.charAt(i));
+        }
+    }
+
+    //    Take it (or) Leave it
     private static void subsets(String str, String output, ArrayList<String> list) {
 //        base case
         if (str.isEmpty()) {
