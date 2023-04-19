@@ -60,10 +60,59 @@ public class Main {
 //        selectionSort(arr, 0);
 
 //        todo Merge Sort
+//        int[] arr = {8,3,4,12,5,6};
+//        mergeSort(arr);
+
+//        todo Quick Sort
         int[] arr = {8,3,4,12,5,6};
-        mergeSort(arr);
+        quickSort(arr, 0, arr.length-1);
+        System.out.println(Arrays.toString(arr));
 
+    }
 
+    private static void quickSort(int[] arr, int si, int ei) {
+//        base case
+        if (si >= ei)
+            return;
+
+        int pivotIndex = partition(arr, si, ei);
+
+        quickSort(arr, si, pivotIndex-1);
+        quickSort(arr, pivotIndex+1, ei);
+    }
+
+    private static int partition(int[] arr, int si, int ei) {
+        int pivotElement = arr[si], smallNumCount = 0, k = si+1;
+        while (k <= ei){ // finding count of numbers smaller than pivotElement
+            if (arr[k] < pivotElement){
+                smallNumCount++;
+            }
+            k++;
+        }
+
+        // placing pivotElement into its correct position
+        int temp = arr[si + smallNumCount];
+        arr[si + smallNumCount] = pivotElement;
+        arr[si] = temp;
+
+        int i = si, j = ei;
+
+        // in this loop, we make sure that every element left to pivotElement is '<' pivotElement
+        // also every element right to pivotElement is  pivotElement '<='
+        while (i < j){
+            if (arr[i] < pivotElement){
+                i++;
+            }else if (arr[j] >= pivotElement){
+                j--;
+            }else {
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                i++;
+                j--;
+            }
+        }
+        return si + smallNumCount;
     }
 
     private static int[] mergeSort(int[] arr) {
