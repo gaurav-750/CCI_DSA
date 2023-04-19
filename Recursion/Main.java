@@ -64,10 +64,59 @@ public class Main {
 //        mergeSort(arr);
 
 //        todo Quick Sort
-        int[] arr = {8,3,4,12,5,6};
-        quickSort(arr, 0, arr.length-1);
-        System.out.println(Arrays.toString(arr));
+//        int[] arr = {8,3,4,12,5,6};
+//        quickSort(arr, 0, arr.length-1);
+//        System.out.println(Arrays.toString(arr));
 
+//        todo skip character
+//        String str = "abcabc";
+//        System.out.println("Skip: " + skipChar(str));
+
+//        todo skip word
+//        String str = "superhero";
+//        System.out.println("Skip word: " + skipWord(str));
+
+//        todo Print Subsets of a String
+        String str = "abc";
+        ArrayList<String> list = new ArrayList<>();
+        subsets(str, "", list);
+        System.out.println("list: "+ list);
+
+
+    }
+
+//    Take it (or) Leave it
+    private static void subsets(String str, String output, ArrayList<String> list) {
+//        base case
+        if (str.isEmpty()) {
+            list.add(output);
+            return;
+        }
+
+//        take it
+        subsets(str.substring(1), output + str.charAt(0), list);
+//        leave it
+        subsets(str.substring(1), output, list);
+    }
+
+    private static String skipWord(String str) {
+//        base case
+        if (str.isEmpty())
+            return "";
+
+        if (str.startsWith("super"))
+            return skipWord(str.substring(5));
+        else
+            return str.charAt(0) + skipWord(str.substring(1));
+    }
+
+    private static String skipChar(String str) {
+//        base case
+        if (str.isEmpty())
+            return "";
+
+        String smallStr = skipChar(str.substring(1));
+        return str.charAt(0) == 'c' ? smallStr : str.charAt(0) + smallStr;
     }
 
     private static void quickSort(int[] arr, int si, int ei) {
