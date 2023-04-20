@@ -82,16 +82,115 @@ public class Main {
 //        System.out.println("List: " + subsets(str, "", list));
 
 //        todo Permutations of string
-        String str = "abc";
-        permutations(str, "");
+//        String str = "abc";
+//        permutations(str, "");
 
 //        todo https://leetcode.com/problems/letter-combinations-of-a-phone-number/
 //        String digits = "23";
-//        letterCombinations(digits);
+//        letterCombinations(digits, "");
+
+
+//        todo Target sum on dice
+//        diceRoll("", 4);
+
+//        todo Maze Problem: total paths
+//        System.out.println("Total Paths: " + totalPaths(0, 0, 3));
+
+//        todo Print the paths
+//        printPaths(0, 0, 3, "");
+
+//        todo Print the paths 2
+//        printPaths2(0, 0, 3, "");
+
+//        todo Paths with obstacles
+        int[][] pathArr = {
+                {1,1,1},
+                {1,0,1},
+                {1,1,1},
+        };
+        printPathWithObstacles(0, 0, 3, "", pathArr);
 
     }
 
-//    private static void letterCombinations(String digits) {
+    private static void printPathWithObstacles(int row, int col, int n, String path, int[][] pathArr) {
+//        base case
+        if (row >= n || col >= n) return; //out of bounds
+//        check if there is an obstacle
+        if (pathArr[row][col] == 0) return;
+
+        if (row == n-1 && col == n-1) {//target reached
+            System.out.println(path);
+            return;
+        }
+
+//        down
+        printPathWithObstacles(row+1, col, n, path+"D", pathArr);
+//        right
+        printPathWithObstacles(row, col+1, n, path+"R", pathArr);
+    }
+
+    private static void printPaths2(int row, int col, int n, String path) {
+//        base case
+        if (row >= n || col >= n) return; //out of bounds
+        if (row == n-1 && col == n-1) {//target reached
+            System.out.println(path);
+            return;
+        }
+
+//        down
+        printPaths2(row+1, col, n, path+"D");
+//        diagonal
+        printPaths2(row+1, col+1, n, path + "\\");
+//        right
+        printPaths2(row, col+1, n, path+"R");
+    }
+
+    private static void printPaths(int row, int col, int n, String path) {
+//        base case
+        if (row >= n || col >= n) return; //out of bounds
+        if (row == n-1 && col == n-1) {//target reached
+            System.out.println(path);
+            return;
+        }
+
+//        down
+        printPaths(row+1, col, n, path+"D");
+//        right
+        printPaths(row, col+1, n, path+"R");
+    }
+
+    private static int totalPaths(int row, int col, int n) {
+//        base case
+        if (row >= n || col >= n) return 0; //out of bounds
+        if (row == n-1 && col == n-1)//target reached
+            return 1;
+
+//        down
+        int down = totalPaths(row+1, col, n);
+//        right
+        int right = totalPaths(row, col+1, n);
+        return down+right;
+    }
+
+    private static void diceRoll(String output, int target) {
+//        base case
+        if (target == 0){
+            System.out.println(output);
+            return;
+        }
+
+        for (int i = 1; i <= 6 && i <= target; i++) {
+            diceRoll(output+i, target-i);
+        }
+    }
+
+//    private static void letterCombinations(String digits, String output) {
+////        base case
+//        if (digits.isEmpty()) {
+//            System.out.println(output);
+//        }
+//
+//
 //
 //    }
 
