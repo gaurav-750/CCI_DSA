@@ -110,15 +110,89 @@ public class Main {
 //        printPathWithObstacles(0, 0, 3, "", pathArr);
 
 //        todo N Queens
-        int n = 4;
-        char[][] chessBoard = new char[n][n];
-        for (char[] arr: chessBoard){
-            Arrays.fill(arr, '.');
-        }
-        List<List<String>> list = new ArrayList<>();
-        nQueens(0, 0, n, chessBoard, list);
-        System.out.println(list);
+//        int n = 4;
+//        char[][] chessBoard = new char[n][n];
+//        for (char[] arr: chessBoard){
+//            Arrays.fill(arr, '.');
+//        }
+//        List<List<String>> list = new ArrayList<>();
+//        nQueens(0, 0, n, chessBoard, list);
+//        System.out.println(list);
 
+//        todo Sudoku Solver
+        char[][] board = {{'5','3','.','.','7','.','.','.','.'},
+                {'6','.','.','1','9','5','.','.','.'},
+                {'.','9','8','.','.','.','.','6','.'},
+                {'8','.','.','.','6','.','.','.','3'},
+                {'4','.','.','8','.','3','.','.','1'},
+                {'7','.','.','.','2','.','.','.','6'},
+                {'.','2','.','.','.','.','2','8','.'},
+                {'.','.','.','4','1','9','.','.','5'},
+                {'.','.','.','.','8','.','.','7','9'}};
+        helper(board, 0, 0);
+        
+
+    }
+
+
+    public static boolean helper(char[][] board, int row, int col) {
+        if(row == board.length) {
+            return true;
+        }
+
+        int nrow, ncol;
+
+        if(col == board.length-1) {
+            nrow = row + 1;
+            ncol = 0;
+        } else {
+            nrow = row;
+            ncol = col + 1;
+        }
+
+        if(board[row][col] != '.') {
+            if(helper(board, nrow, ncol)) {
+                return true;
+            }
+        } else {
+
+            //fill the place
+            for(int i=1; i<=9; i++) {
+                if(canPlacei(row, col,(char) (i+'0'), board)) {
+                    board[row][col] = (char)(i+'0');
+                    if(helper(board, nrow, ncol))
+                        return true;
+                    else
+                        board[row][col] = '.';
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean canPlacei(int row, int col, char i, char[][] board) {
+//        check in the diagonal (row)
+        for (int j = 0; j < 9; j++) {
+            if (board[row][j] == i)
+                return false;
+        }
+        
+//        check vertically (col)
+        for (int j = 0; j < 9; j++) {
+            if (board[j][col] == i)
+                return false;
+        }
+
+//        check in the 3*3 box
+        int si = (row/3)*3, sj = (col/3)*3;
+        for (int j = si; j <= (si+2); j++) {
+            for (int k = sj; k <= (sj+2); k++) {
+                if (board[j][k] == i)
+                    return false;
+            }
+        }
+        return true;
     }
 
     private static List<List<String>> nQueens(int row, int col, int n, char[][] chessBoard, List<List<String>> list) {
