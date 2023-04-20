@@ -1,7 +1,6 @@
 package Recursion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -103,13 +102,91 @@ public class Main {
 //        printPaths2(0, 0, 3, "");
 
 //        todo Paths with obstacles
-        int[][] pathArr = {
-                {1,1,1},
-                {1,0,1},
-                {1,1,1},
-        };
-        printPathWithObstacles(0, 0, 3, "", pathArr);
+//        int[][] pathArr = {
+//                {1,1,1},
+//                {1,0,1},
+//                {1,1,1},
+//        };
+//        printPathWithObstacles(0, 0, 3, "", pathArr);
 
+//        todo N Queens
+        int n = 4;
+        char[][] chessBoard = new char[n][n];
+        for (char[] arr: chessBoard){
+            Arrays.fill(arr, '.');
+        }
+        List<List<String>> list = new ArrayList<>();
+        nQueens(0, 0, n, chessBoard, list);
+        System.out.println(list);
+
+    }
+
+    private static List<List<String>> nQueens(int row, int col, int n, char[][] chessBoard, List<List<String>> list) {
+//        base case
+        if (col >= n) return null;
+        if (row == n){
+            printChessBoard(chessBoard);
+            return chessBoardString(chessBoard, list);
+        }
+
+//      check if queen can be placed here
+        if (canQueenBePlacedHere(chessBoard, row, col)){
+            chessBoard[row][col] = 'Q';
+            nQueens(row+1, 0, n, chessBoard, list);
+        }
+
+        chessBoard[row][col] = '.';
+        nQueens(row, col+1, n, chessBoard, list);
+        return list;
+    }
+
+    private static List<List<String>> chessBoardString(char[][] chessBoard, List<List<String>> list) {
+        List<String> smallList = new ArrayList<>();
+        for (char[] arr : chessBoard){
+            StringBuilder str = new StringBuilder();
+            for (char c: arr)
+                str.append(c);
+            smallList.add(str.toString());
+        }
+        list.add(smallList);
+        return list;
+    }
+
+    private static boolean canQueenBePlacedHere(char[][] chessBoard, int row, int col) {
+//        check if there's any attack to the Queen if placed at chessBoard[row][col]
+//        from up
+        for (int i = 0; i < row; i++) {
+            if (chessBoard[i][col] == 'Q')
+                return false;
+        }
+
+//        from left diagonal
+        int i = row-1, j = col-1;
+        while (i >= 0 && j >= 0){
+            if (chessBoard[i][j] == 'Q')
+                return false;
+            i--; j--;
+        }
+
+//        from right diagonal
+        i = row-1; j = col+1; int n = chessBoard.length-1;
+        while (i >= 0 && j <= n){
+            if (chessBoard[i][j] == 'Q')
+                return false;
+            i--; j++;
+        }
+        return true;
+    }
+
+    private static void printChessBoard(char[][] chessBoard) {
+        int n = chessBoard.length;
+        for (char[] chars : chessBoard) {
+            for (int j = 0; j < n; j++) {
+                System.out.print(chars[j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     private static void printPathWithObstacles(int row, int col, int n, String path, int[][] pathArr) {
