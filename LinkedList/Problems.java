@@ -4,8 +4,8 @@ public class Problems {
     public static void main(String[] args) {
 
         Linked_List linkedList = new Linked_List();
-//        Node<Integer> head = linkedList.takeInput();
-//        linkedList.printLL(head);
+        Node<Integer> head = linkedList.takeInput();
+        linkedList.printLL(head);
 
 //        head = linkedList.insertRecursively(101, 3, head);
 //        linkedList.printLL(head);
@@ -15,10 +15,50 @@ public class Problems {
 //        linkedList.printLL(head);
         
 //        todo https://leetcode.com/problems/merge-two-sorted-lists/description/
-        Node<Integer> head1 = linkedList.takeInput();
-        Node<Integer> head2 = linkedList.takeInput();
-        linkedList.printLL(mergeTwoLinkedLists(head1, head2));
+//        Node<Integer> head1 = linkedList.takeInput();
+//        Node<Integer> head2 = linkedList.takeInput();
+//        linkedList.printLL(mergeTwoLinkedLists(head1, head2));
 
+//        todo https://leetcode.com/problems/linked-list-cycle/
+        System.out.println("Has Cycle: " + hasCycle(head));
+
+//        todo Length of cycle in LL
+        System.out.println("Length of Cycle: " + lengthOfCycle(head));
+
+    }
+
+    private static int lengthOfCycle(Node<Integer> head) {
+        if (head == null || head.next == null) return 0;
+        Node<Integer> slow = head, fast = head;
+
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+//                that means there is a cycle in the Linked List
+                int len = 0;
+                do {
+                    slow = slow.next;
+                    len++;
+                } while (slow != fast);
+                return len;
+            }
+        }
+        return 0;
+    }
+
+    private static boolean hasCycle(Node<Integer> head) {
+        if (head == null || head.next == null) return false;
+        Node<Integer> slow = head, fast = head.next.next;
+
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast)
+                return true;
+        }
+        return false;
     }
 
     private static Node<Integer> mergeTwoLinkedLists(Node<Integer> head1, Node<Integer> head2) {
