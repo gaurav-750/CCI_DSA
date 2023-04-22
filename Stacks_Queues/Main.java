@@ -7,6 +7,7 @@ public class Main {
 
 //        Stack<Integer> stack = new Stack<>();
 //        CustomStack stack = new CustomStack();
+        /*
         DynamicStack stack = new DynamicStack();
         stack.push(5);
         stack.push(4);
@@ -24,6 +25,18 @@ public class Main {
         stack.push(101);
         System.out.println(stack.pop());
         System.out.println(stack.peek());
+        */
+
+        CustomQueue queue = new CustomQueue();
+        queue.insert(1);
+        queue.insert(2);
+        queue.insert(3);
+        queue.insert(4);
+        queue.insert(5);
+
+        queue.display();
+        queue.remove();
+        queue.display();
 
     }
 }
