@@ -20,11 +20,83 @@ public class Problems {
 //        linkedList.printLL(mergeTwoLinkedLists(head1, head2));
 
 //        todo https://leetcode.com/problems/linked-list-cycle/
-        System.out.println("Has Cycle: " + hasCycle(head));
+//        System.out.println("Has Cycle: " + hasCycle(head));
 
 //        todo Length of cycle in LL
-        System.out.println("Length of Cycle: " + lengthOfCycle(head));
+//        System.out.println("Length of Cycle: " + lengthOfCycle(head));
+        
+//        todo https://leetcode.com/problems/middle-of-the-linked-list/
+//        middleOfLinkedList(head);
 
+//        todo https://leetcode.com/problems/sort-list/
+//        linkedList.printLL(sortLinkedList(head));
+
+//        todo https://leetcode.com/problems/reverse-linked-list/description/
+//        linkedList.printLL(reverseLL(head));
+        linkedList.printLL(reverseLLIteratively(head));
+
+
+    }
+
+    private static Node<Integer> reverseLLIteratively(Node<Integer> head) {
+        Node<Integer> past = null, present = head, future = head.next;
+
+        while (present != null){
+            present.next = past;
+            past = present;
+            present = future;
+            if (future != null)
+                future = future.next;
+        }
+        return past;
+    }
+
+    private static Node<Integer> reverseLL(Node<Integer> head) {
+//        base case
+        if (head == null || head.next == null)
+            return head;
+
+        Node<Integer> ans = reverseLL(head.next);
+        Node<Integer> temp = ans;
+        while (temp.next != null)
+            temp = temp.next;
+        temp.next = head;
+        head.next = null;
+
+        return ans;
+    }
+
+    private static Node<Integer> sortLinkedList(Node<Integer> head) {
+//        Linked_List l = new Linked_List();
+//        l.printLL(head);
+//        base case
+        if (head == null || head.next == null)
+            return head;
+
+        Node<Integer> mid = getMid(head);
+        Node<Integer> left = sortLinkedList(head);
+        Node<Integer> right = sortLinkedList(mid);
+        return mergeTwoLinkedLists(left, right);
+    }
+
+    private static Node<Integer> getMid(Node<Integer> head) {
+        Node<Integer> midPrev = null;
+        while (head != null && head.next != null){
+            midPrev = midPrev == null ? head : midPrev.next;
+            head = head.next.next;
+        }
+        Node<Integer> mid = midPrev.next;
+        midPrev.next = null;
+        return mid;
+    }
+
+    private static Node<Integer> middleOfLinkedList(Node<Integer> head) {
+        Node<Integer> slow = head, fast = head;
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
     }
 
     private static int lengthOfCycle(Node<Integer> head) {
