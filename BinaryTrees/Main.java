@@ -4,6 +4,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+class Diam{
+    int diam;
+    int height;
+
+    public Diam(int diam, int height){
+        this.diam = diam;
+        this.height = height;
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
 
@@ -32,8 +42,67 @@ public class Main {
 //        System.out.println("Sum of nodes: " + sumOfNodes(root));
 
 //        todo Height of Binary Tree
-        System.out.println("Height: " + heightOfBTree(root));
+//        System.out.println("Height: " + heightOfBTree(root));
 
+//        todo https://leetcode.com/problems/diameter-of-binary-tree/
+//        System.out.println("Diameter of Binary Tree: " + diameterOfBTree(root));
+//        System.out.println("Diameter of Binary Tree: " + diameter(root).diam);
+
+//        todo https://leetcode.com/problems/subtree-of-another-tree/
+        BinaryTreeNode<Integer> subRoot = bt.takeInput();
+        System.out.println("Is SubTree: " + isSubTree(root, subRoot));
+
+
+    }
+
+    private static boolean isSubTree(BinaryTreeNode<Integer> root, BinaryTreeNode<Integer> subRoot) {
+        if (subRoot == null) return true;
+        if (root == null)
+            return false;
+        
+        if (root.data == subRoot.data) {
+            if (isIdentical(root, subRoot)){
+                return true;
+            }
+        }
+        
+        return isSubTree(root.left, subRoot) || isSubTree(root.right, subRoot);
+    }
+
+    private static boolean isIdentical(BinaryTreeNode<Integer> root, BinaryTreeNode<Integer> subRoot) {
+//        base case
+        if (root == null && subRoot == null)
+            return true;
+        if (subRoot == null || root == null || root.data != subRoot.data)
+            return false;
+
+        return root.data == subRoot.data &&
+                isIdentical(root.left, subRoot.left) && isIdentical(root.right, subRoot.right);
+    }
+
+    private static Diam diameter(BinaryTreeNode<Integer> root) {
+//        base case
+        if (root == null)
+            return new Diam(0,0);
+
+        Diam leftObj = diameter(root.left);
+        Diam rightObj = diameter(root.right);
+
+        int d = leftObj.height + rightObj.height + 1;
+        int h = Math.max(leftObj.height, rightObj.height) + 1;
+        int maxD = Math.max(Math.max(leftObj.diam, rightObj.diam), d); //return the max Diameter until this node
+        return new Diam(maxD, h);
+    }
+
+    private static int diameterOfBTree(BinaryTreeNode<Integer> root) {
+//        base case
+        if (root == null) return 0;
+
+        int leftDiameter = diameterOfBTree(root.left);
+        int rightDiameter = diameterOfBTree(root.right);
+        int rootDiameter = heightOfBTree(root.left) + heightOfBTree(root.right) + 1;
+
+        return Math.max(Math.max(leftDiameter, rightDiameter), rootDiameter);
     }
 
     private static int heightOfBTree(BinaryTreeNode<Integer> root) {
