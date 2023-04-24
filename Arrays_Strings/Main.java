@@ -113,6 +113,10 @@ public class Main {
 
 //       todo Prime numbers in the given range
 //        printPrimeNumInRange(24);
+
+
+
+
     }
 
     private static void printPrimeNumInRange(int n){
