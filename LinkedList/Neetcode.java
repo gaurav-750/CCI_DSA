@@ -23,10 +23,10 @@ public class Neetcode {
 //        deleteDuplicates(head);
 
 //        todo https://leetcode.com/problems/intersection-of-two-linked-lists/
-        Node<Integer> head1 = ll.takeInput();
-        Node<Integer> head2 = ll.takeInput();
-        getIntersectionNode(head1, head2);
-        getIntersectionNodeOptimized(head1, head2);
+//        Node<Integer> head1 = ll.takeInput();
+//        Node<Integer> head2 = ll.takeInput();
+//        getIntersectionNode(head1, head2);
+//        getIntersectionNodeOptimized(head1, head2);
 
     }
 
