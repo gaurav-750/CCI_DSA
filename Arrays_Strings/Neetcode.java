@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {1,0,0,0,0,1};
+        int[] arr = {1,7,3,6,5,6};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -49,7 +49,75 @@ public class Neetcode {
 //        todo https://leetcode.com/problems/can-place-flowers/
 //        System.out.println("Can Place Flowers: " + canPlaceFlowers(arr, 2));
 
+//        todo https://leetcode.com/problems/next-greater-element-i/
+//        int[] arr1 = {1,3,5,2,4};
+//        int[] arr2 = {6,5,4,3,2,1,7};
+//        nextGreaterElement(arr1, arr2);
+//        nextGreaterElementUsingStack(arr1, arr2);
 
+//        todo https://leetcode.com/problems/find-pivot-index/
+        System.out.println("Pivot Index: " + pivotIndex(arr));
+
+    }
+
+    private static int pivotIndex(int[] arr) {
+        int totalSum = 0;
+        for (int elem: arr) totalSum += elem;
+
+        int leftSum = 0, rightSum = totalSum;
+        for (int i = 0; i < arr.length; i++) {
+            rightSum = rightSum - arr[i];
+
+            if (leftSum == rightSum)
+                return i;
+            leftSum += arr[i];
+        }
+        return -1;
+    }
+
+    private static int[] nextGreaterElementUsingStack(int[] arr1, int[] arr2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < arr1.length; i++)
+            map.put(arr1[i], i);
+        Arrays.fill(arr1, -1);
+
+        Stack<Integer> stack = new Stack<>();
+        for (int cur : arr2) {
+            while (!stack.isEmpty() && cur > stack.peek()) {
+                int val = stack.pop();
+                int idx = map.get(val);
+                arr1[idx] = cur;
+            }
+
+            if (map.containsKey(cur))
+                stack.push(cur);
+        }
+        return arr1;
+    }
+
+    private static int[] nextGreaterElement(int[] arr1, int[] arr2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < arr1.length; i++) {
+            map.put(arr1[i], i);
+        }
+
+        for (int i = 0; i < arr2.length; i++) {
+            if (map.containsKey(arr2[i])){
+//                find the next greater element
+                int greater = -1;
+                for (int j = i+1; j < arr2.length; j++) {
+                    if (arr2[j] > arr2[i]){
+                        greater = arr2[j];
+                        break;
+                    }
+                }
+
+                System.out.println("greater = " + greater);
+                arr1[map.get(arr2[i])] = greater;
+                System.out.println(Arrays.toString(arr1));
+            }
+        }
+        return arr1;
     }
 
     private static boolean canPlaceHere(int[] arr, int i) {
