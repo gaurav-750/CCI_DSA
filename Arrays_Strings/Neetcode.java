@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {0,1,2,2,3,0,4,2};
+        int[] arr = {1,0,0,0,0,1};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -37,11 +37,81 @@ public class Neetcode {
 //        generatePascalsTriangle(5);
 
 //        todo https://leetcode.com/problems/remove-element/
-        int len = removeElement(arr, 2);
-        for (int i = 0; i < len; i++) {
-            System.out.print(arr[i] + " ");
-        }
+//        int len = removeElement(arr, 2);
 
+//        todo https://leetcode.com/problems/unique-email-addresses/
+//        String[] emails = {"test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"};
+//        System.out.println("Number of unique emails: " + numUniqueEmails(emails));
+
+//        todo https://leetcode.com/problems/isomorphic-strings/
+//        System.out.println("Is Isomorphic: " + isIsomorphic("foo", "bar"));
+
+//        todo https://leetcode.com/problems/can-place-flowers/
+//        System.out.println("Can Place Flowers: " + canPlaceFlowers(arr, 2));
+
+
+    }
+
+    private static boolean canPlaceHere(int[] arr, int i) {
+        if (i-1 >= 0 && arr[i-1] == 1)
+            return false;
+        if (i+1 < arr.length && arr[i+1] == 1)
+            return false;
+        return true;
+    }
+
+    private static boolean canPlaceFlowers(int[] arr, int n) {
+        if (n == 0) return true;
+
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] == 0 && canPlaceHere(arr, i)) {
+                arr[i] = 1; n--;
+                if (n == 0) return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
+    private static boolean isIsomorphic(String str1, String str2) {
+        HashMap<Character, Character> map1 = new HashMap<>();
+        HashMap<Character, Character> map2 = new HashMap<>();
+
+        int i = 0;
+        while (i < str2.length()){
+            char c1 = str1.charAt(i), c2 = str2.charAt(i);
+
+            if (map1.containsKey(c1) && map1.get(c1) != c2) return false;
+            else map1.put(c1, c2);
+
+            if (map2.containsKey(c2) && map2.get(c2) != c1) return false;
+            else map2.put(c2, c1);
+            i++;
+        }
+        return true;
+    }
+
+    private static int numUniqueEmails(String[] emails) {
+        HashSet<String> set = new HashSet<>();
+        for (String email: emails){
+            email = formatEmail(email);
+            set.add(email);
+        }
+        return set.size();
+    }
+
+    private static String formatEmail(String email) {
+//        "test.email+alex@leetcode.com"
+        String[] arr = email.split("@");
+//      [test.email+alex, leetcode.com]
+        String local = arr[0];
+        local = local.replaceAll("\\.", "");
+//        testemail+alex
+
+        String[] localNameArr = local.split("\\+");
+        String localName = localNameArr[0];
+        return localName + "@" + arr[1];
     }
 
     private static int removeElement(int[] arr, int val) {
