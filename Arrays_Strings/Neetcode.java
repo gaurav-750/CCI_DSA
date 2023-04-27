@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {1,7,3,6,5,6};
+        int[] arr = {1,1,1,2,2,3};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -56,8 +56,158 @@ public class Neetcode {
 //        nextGreaterElementUsingStack(arr1, arr2);
 
 //        todo https://leetcode.com/problems/find-pivot-index/
-        System.out.println("Pivot Index: " + pivotIndex(arr));
+//        System.out.println("Pivot Index: " + pivotIndex(arr));
 
+
+//        https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
+//        findDisappearedNumbers(arr);
+
+//        todo https://leetcode.com/problems/maximum-number-of-balloons/
+//        System.out.println("Max number of balloons: " + maxNumberOfBalloons("nlaebolko"));
+
+//        todo https://leetcode.com/problems/word-pattern/
+//        String pattern = "abba", str = "dog dog dog dog";
+//        System.out.println("Same Pattern: " + wordPattern(pattern, str));
+
+//        todo https://leetcode.com/problems/sort-an-array/
+//        sortArray(arr);
+
+//      todo https://leetcode.com/problems/top-k-frequent-elements/
+        topKFrequentElements(arr, 2);
+
+    }
+
+    private static int[] topKFrequentElements(int[] arr, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int num: arr)
+            map.put(num, map.getOrDefault(num, 0)+1);
+
+//        declare a maxHeap
+        PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>(
+                (a,b) -> b.getValue() - a.getValue());
+
+//        add all the map elements to the maxHeap
+        maxHeap.addAll(map.entrySet());
+
+//        poll k from maxHeap
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            Map.Entry<Integer, Integer> entry = maxHeap.poll();
+            res[i] = entry.getKey();
+        }
+        return res;
+    }
+
+    private static int[] sortArray(int[] arr) {
+//        base case
+        if (arr.length == 1)
+            return arr;
+
+        int mid = arr.length/2;
+        int[] firstHalf = Arrays.copyOfRange(arr, 0, mid);
+        int[] secondHalf = Arrays.copyOfRange(arr, mid, arr.length);
+
+        int[] arr1 = sortArray(firstHalf);
+        int[] arr2 = sortArray(secondHalf);
+        return merge(arr1, arr2);
+    }
+
+    private static int[] merge(int[] arr1, int[] arr2) {
+        if (arr1.length == 0) return arr2;
+        if (arr2.length == 0) return arr1;
+
+        int[] arr = new int[arr1.length + arr2.length];
+        int i = 0, j = 0, k = 0;
+        while (i < arr1.length && j < arr2.length){
+            if (arr1[i] <= arr2[j]) {
+                arr[k] = arr1[i];
+                i++;
+            }else { // arr2[j] > arr1[i]
+                arr[k] = arr2[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < arr1.length){
+            arr[k] = arr1[i];
+            k++; i++;
+        }
+        while (j < arr2.length){
+            arr[k] = arr2[j];
+            k++; j++;
+        }
+        return arr;
+    }
+
+    private static boolean wordPattern(String pattern, String str) {
+        String[] strArr = str.split("\\s");
+        if (pattern.length() != strArr.length)
+            return false;
+
+        HashMap<Character, String> map1 = new HashMap<>();
+        HashMap<String, Character> map2 = new HashMap<>();
+
+        for (int i = 0; i < pattern.length(); i++) {
+            char c = pattern.charAt(i);
+            String cur = strArr[i];
+
+            if (map1.containsKey(c) && !map1.get(c).equals(cur))
+                return false;
+            if (map2.containsKey(cur) && c != map2.get(cur))
+                return false;
+
+            map1.put(c, cur);
+            map2.put(cur, c);
+        }
+        return true;
+    }
+
+    private static int maxNumberOfBalloons(String str) {
+        String s = "balloon";
+        HashMap<Character, Integer> map1 = new HashMap<>();
+
+        for (int i = 0; i < str.length(); i++) {
+            if (map1.containsKey(str.charAt(i))) map1.put(str.charAt(i), map1.get(str.charAt(i)) + 1);
+            else map1.put(str.charAt(i), 1);
+        }
+
+        int count = 0; int i;
+        while (true){
+            for (i = 0; i < s.length(); i++) {
+                char c = s.charAt(i);
+                if (map1.containsKey(c) && map1.get(c) > 0)
+                    map1.put(c, map1.get(c)-1);
+                else
+                    return count;
+            }
+
+            if (i == s.length())
+                count += 1;
+        }
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static List<Integer> findDisappearedNumbers(int[] arr) {
+        int i = 0;
+        while (i < arr.length){
+            if (arr[i] != i+1 && arr[i] != arr[arr[i]-1]){
+                swap(arr, i, arr[i]-1);
+            }else {
+                i++;
+            }
+        }
+
+        List<Integer> res = new ArrayList<>();
+        for (int j = 0; j < arr.length; j++)
+            if (arr[j] != j+1)
+                res.add(j+1);
+        return res;
     }
 
     private static int pivotIndex(int[] arr) {
