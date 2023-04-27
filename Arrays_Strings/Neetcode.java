@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {1,1,1,2,2,3};
+        int[] arr = {0,3,7,2,5,8,4,6,0,1};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -73,8 +73,80 @@ public class Neetcode {
 //        sortArray(arr);
 
 //      todo https://leetcode.com/problems/top-k-frequent-elements/
-        topKFrequentElements(arr, 2);
+//        topKFrequentElements(arr, 2);
 
+//        todo https://leetcode.com/problems/product-of-array-except-self/
+//        productExceptSelf(arr);
+//        productExceptSelfOptimized(arr);
+
+//        todo https://leetcode.com/problems/longest-consecutive-sequence/description/
+        longestConsecutive(arr);
+
+
+    }
+
+    private static int longestConsecutive(int[] arr) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int num: arr)
+            set.add(num);
+
+        int max = -1, cur;
+        for (int num: arr){
+            int curnum = num; cur = 0;
+
+            if (!set.contains(curnum-1)){ //we r at the minimal element
+                while (set.contains(curnum)){
+                    cur++;
+                    curnum++;
+                }
+                max = Math.max(max, cur);
+            }
+        }
+        return max;
+    }
+
+    private static int[] productExceptSelfOptimized(int[] arr) {
+        int[] res = new int[arr.length];
+        int pre = 1, post = 1;
+        for (int i = 0; i < arr.length; i++) {
+            res[i] = pre;
+            pre = pre*arr[i];
+        }
+
+        for (int i = arr.length-1; i >= 0; i--) {
+            res[i] = res[i]*post;
+            post = post*arr[i];
+        }
+
+//        System.out.println(Arrays.toString(res));
+        return res;
+    }
+
+    private static int[] productExceptSelf(int[] arr) {
+        int[] prefix = new int[arr.length];
+        int[] postfix = new int[arr.length];
+
+        int pre = 1;
+        for (int i = 0; i < arr.length; i++) {
+            pre = pre*arr[i];
+            prefix[i] = pre;
+        }
+
+        int post = 1;
+        for (int i = arr.length-1; i >= 0; i--) {
+            post = post*arr[i];
+            postfix[i] = post;
+        }
+
+        for (int i = 0; i < arr.length; i++) {
+            pre = 1; post = 1;
+            if (i-1 >= 0)
+                pre = prefix[i-1];
+            if (i+1 < arr.length)
+                post = postfix[i+1];
+            arr[i] = pre *  post;
+        }
+        return arr;
     }
 
     private static int[] topKFrequentElements(int[] arr, int k) {
