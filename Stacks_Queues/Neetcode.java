@@ -73,7 +73,16 @@ class MinStack{
     public int getMin() {
         return list.get(min);
     }
+}
 
+class SNode{
+    char c;
+    int count;
+
+    public SNode(char c, int count){
+        this.c = c;
+        this.count = count;
+    }
 }
 
 public class Neetcode {
@@ -121,8 +130,38 @@ public class Neetcode {
 //        System.out.println(simplifyPath("/../"));
 
 //        todo https://leetcode.com/problems/decode-string/
-        System.out.println("Decoded String: " + decodeString("3[a2[c]]"));
+//        System.out.println("Decoded String: " + decodeString("3[a2[c]]"));
 
+//        todo https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
+        removeDuplicates( "pbbcggttciiippooaais", 2);
+
+
+    }
+
+    private static String removeDuplicates(String s, int k) {
+        Stack<SNode> stack = new Stack<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (!stack.isEmpty() && stack.peek().c == c){
+                SNode top = stack.peek();
+                top.count = top.count+1;
+
+                if (top.count == k)
+                    stack.pop();
+            }else
+                stack.push(new SNode(c, 1));
+        }
+
+        String res = "";
+        for (SNode node: stack){
+            for (int i = 0; i < node.count; i++) {
+                res = res + node.c;
+            }
+        }
+        System.out.println("res = " + res);
+        return res;
     }
 
     private static String decodeString(String s) {
