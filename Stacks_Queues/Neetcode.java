@@ -1,8 +1,6 @@
 package Stacks_Queues;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 class MyStack{
     Queue<Integer> queue;
@@ -37,6 +35,46 @@ class MyStack{
 
 }
 
+class MinStack{
+
+    ArrayList<Integer> list;
+    int top, min;
+    public MinStack(){
+        list = new ArrayList<>();
+        top = min = -1;
+    }
+
+    public void push(int x){
+        if (min == -1) min = 0;
+
+        list.add(x);
+        if (list.get(min) > list.get(list.size()-1))
+            min = list.size()-1;
+    }
+
+    public void pop(){
+        if (min == list.size()-1){
+            //adjust the min
+            int m = 0;
+            for (int i = 0; i < list.size()-1; i++) {
+                if (list.get(m) >= list.get(i))
+                    m = i;
+            }
+            min = m;
+        }
+
+        list.remove(list.size()-1);
+    }
+
+    public int top(){
+        return list.get(list.size()-1);
+    }
+
+    public int getMin() {
+        return list.get(min);
+    }
+
+}
 
 public class Neetcode {
     public static void main(String[] args) {
@@ -49,8 +87,115 @@ public class Neetcode {
 //        System.out.println("Total points: " + calPoints(ops));
 
 //        todo https://leetcode.com/problems/implement-stack-using-queues
+//        MyStack ms = new MyStack();
 
+//        todo https://leetcode.com/problems/min-stack/
+//        MinStack minStack = new MinStack();
+//        minStack.push(-2);
+//        minStack.push(-0);
+//        minStack.push(-3);
+//
+//        System.out.println(minStack.getMin());
+//        minStack.pop();
+//        System.out.println(minStack.top());
+//        System.out.println(minStack.getMin());
 
+//        todo https://leetcode.com/problems/evaluate-reverse-polish-notation/
+//        String[] tokens = {"2","1","+","3","*"};
+//        System.out.println("RPN ans: " + reversePolishNotation(tokens));
+
+//        todo https://leetcode.com/problems/generate-parentheses/
+//        System.out.println(generateParentheses(1));
+
+//        todo https://leetcode.com/problems/asteroid-collision/
+//        int[] arr = {-2,-1,1,-2};
+//        System.out.println(Arrays.toString(asteroidCollisions(arr)));
+
+//        todo 
+
+    }
+
+//    Collision happens only when asteroid is -ve and stack's top is +ve
+//    private static int[] asteroidCollisions(int[] asteroids) {
+//        Stack<Integer> stack = new Stack<>();
+//        for (int asteroid: asteroids){
+//            if (asteroid > 0) { //+ve
+//
+//
+//            }else { //-ve
+//
+//            }
+//
+//            System.out.println(stack);
+//        }
+//
+////        return the result
+//        return buildArrFromStack(stack);
+//    }
+
+    private static int[] buildArrFromStack(Stack<Integer> stack){
+        int[] res = new int[stack.size()];
+        int i = 0;
+
+        for (Integer integer : stack) {
+            res[i] = integer;
+            i++;
+        }
+        return res;
+    }
+
+    static List<String> res = new ArrayList<>();
+    private static List<String> generateParentheses(int n) {
+        helper(0, 0, n, "");
+        return res;
+    }
+
+    private static void helper(int open, int close, int n, String output) {
+//        base case
+        if (open == n && close == n) {
+            res.add(output);
+            return;
+        }
+
+        if (open < n){
+            output += "(";
+            helper(open+1, close, n, output);
+            output = output.substring(0, output.length()-1);
+        }
+
+        if (close < open) {
+            output += ")";
+            helper(open, close + 1, n, output);
+            output = output.substring(0, output.length()-1);
+        }
+
+    }
+
+    private static int reversePolishNotation(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+
+        for (String cur : tokens) {
+            if (cur.equals("+") || cur.equals("-") || cur.equals("*") || cur.equals("/")) {
+//                pop two elements and push the result into the stack
+                int val1 = stack.pop();
+                int val2 = stack.pop();
+                int ans;
+                if (cur.equals("+"))
+                    ans = val1 + val2;
+                else if (cur.equals("-"))
+                    ans = val2 - val1;
+                else if (cur.equals("*"))
+                    ans = val1 * val2;
+                else
+                    ans = val2 / val1;
+
+                stack.push(ans);
+            } else {
+                stack.push(Integer.parseInt(cur));
+            }
+        }
+
+        return stack.pop();
     }
 
     private static int calPoints(String[] ops) {
