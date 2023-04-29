@@ -111,8 +111,94 @@ public class Neetcode {
 //        int[] arr = {-2,-1,1,-2};
 //        System.out.println(Arrays.toString(asteroidCollisions(arr)));
 
-//        todo 
+//        todo https://leetcode.com/problems/daily-temperatures/description/
+//        int[] temperatures = {73,74,75,71,69,72,76,73};
+//        dailyTemperatures(temperatures);
 
+//        todo https://leetcode.com/problems/simplify-path/
+//        simplifyPath("/abc//.def/../");
+//        System.out.println("Simplified Path: " + simplifyPath("/..hidden"));
+//        System.out.println(simplifyPath("/../"));
+
+//        todo https://leetcode.com/problems/decode-string/
+        System.out.println("Decoded String: " + decodeString("3[a2[c]]"));
+
+    }
+
+    private static String decodeString(String s) {
+        Stack<String> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (c != ']')
+                stack.push(c+"");
+            else { // c == ']'
+                String res = "";
+                while (!stack.peek().equals("["))
+                    res = stack.pop() + res;
+
+                stack.pop(); //remove [ from stack
+                String num = "";
+                while (!stack.isEmpty() && isInteger(stack.peek()))
+                    num = stack.pop() + num;
+
+                int n = Integer.parseInt(num);
+                String small = "";
+                //multiply res * n and push into stack
+                for (int j = 0; j < n; j++) {
+                    small += res;
+                }
+                stack.push(small);
+            }
+        }
+
+        return String.join("", stack);
+    }
+
+    private static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
+    }
+
+    private static String simplifyPath(String str) {
+        Stack<String> stack = new Stack<>();
+        String[] arr = str.split("/");
+        System.out.println(Arrays.toString(arr));
+
+        for (String s : arr){
+            if (!stack.isEmpty() && s.equals(".."))
+                stack.pop();
+            else if (!Arrays.asList("", ".", "..").contains(s))
+                stack.push(s);
+        }
+
+        return "/" + String.join("/", stack);
+    }
+
+    private static int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] ans = new int[n];
+
+        Stack<Integer> stack = new Stack<>();
+        for (int i = (n-1); i >= 0; i--) {
+            int curTemp = temperatures[i];
+//            remove temps which is less than the current temperature
+            while (!stack.isEmpty() && temperatures[stack.peek()] <= curTemp)
+                stack.pop();
+
+//            we've greater temp than the current
+            if (!stack.isEmpty())
+                ans[i] = stack.peek() - i;
+
+            stack.push(i);
+        }
+//        System.out.println(Arrays.toString(ans));
+        return ans;
     }
 
 //    Collision happens only when asteroid is -ve and stack's top is +ve
