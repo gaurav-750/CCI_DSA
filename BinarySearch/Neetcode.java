@@ -23,9 +23,52 @@ public class Neetcode {
 //        System.out.println("Is Perfect Square: " + isPerfectSquare(2147483647));
 
 //        todo https://leetcode.com/problems/search-a-2d-matrix/description/
-        int[][] arr2D = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
-        System.out.println("Is Present in Matrix: " + searchIn2D(arr2D, 0, 164));
+//        int[][] arr2D = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
+//        System.out.println("Is Present in Matrix: " + searchIn2D(arr2D, 0, 164));
 
+//        todo https://leetcode.com/problems/koko-eating-bananas/
+        int[] piles = {805306368,805306368,805306368};
+        System.out.println("Min Eating Speed: " + minEatingSpeed(piles, 1000000000));
+
+
+
+    }
+
+    private static int minEatingSpeed(int[] piles, int h) {
+        //find the max eating speed -> it'll be the max. in the piles
+        int e = findMax(piles), s = 1; //minimum eating speed will obv. be 1 (cannot be 0, iska matlab vo kha hi nahi raha)
+
+        int mid = 0, res = e;
+        while (s <= e){
+            mid = (s+e)/2;
+            long hoursToEat = calculateHours(piles, mid);
+
+            if (hoursToEat <= h) {
+                res = Math.min(res, mid); //possible answer
+                e = mid - 1;
+            }
+            else //hoursToEat > h
+                s = mid+1;
+        }
+        return res;
+    }
+
+    private static long calculateHours(int[] piles, int k) {
+        long hours = 0;
+        for (int elem: piles){
+           int h = (int) Math.ceil((double) elem/k);
+           hours += h;
+        }
+        return hours;
+    }
+
+    private static int findMax(int[] piles) {
+        int max = -1;
+        for (int elem: piles){
+            if (max < elem)
+                max = elem;
+        }
+        return max;
     }
 
     private static boolean searchIn2D(int[][] arr2D, int row, int k) {
