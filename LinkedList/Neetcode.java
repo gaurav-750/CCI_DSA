@@ -32,8 +32,48 @@ public class Neetcode {
 //        ll.printLL(reOrderLList(head));
 
 //        todo https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list/
-        maximumTwinSum(head);
+//        maximumTwinSum(head);
 
+//        todo https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+//        ll.printLL(removeNthNodeFromEnd(head, 1));
+//        removeNthNodeFromEndOptimized(head, 2);
+
+//        todo 
+
+
+    }
+
+//    private static Node<Integer> removeNthNodeFromEndOptimized(Node<Integer> head, int n) {
+
+//
+//
+//    }
+
+    private static Node<Integer> removeNthNodeFromEnd(Node<Integer> head, int n) {
+        Node<Integer> finalHead = head;
+        int len = lengthOfLL(head);
+        //edge case
+        if (n == len) return finalHead.next;
+        int cnt = len-n, i = 0;
+
+        while (i < (cnt-1)){
+            head = head.next;
+            i++;
+        }
+
+        if (head.next != null)
+            head.next = head.next.next;
+        else return null;
+        return finalHead;
+    }
+
+    private static int lengthOfLL(Node<Integer> head) {
+        int len = 0;
+        while (head != null){
+            head = head.next;
+            len += 1;
+        }
+        return len;
     }
 
     private static int maximumTwinSum(Node<Integer> head) {
