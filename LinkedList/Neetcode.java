@@ -7,8 +7,8 @@ public class Neetcode {
     public static void main(String[] args) {
 
         Linked_List ll = new Linked_List();
-//        Node<Integer> head = ll.takeInput();
-//        ll.printLL(head);
+        Node<Integer> head = ll.takeInput();
+        ll.printLL(head);
 
 //        todo https://leetcode.com/problems/reverse-linked-list/
 //        reverseLL(head);
@@ -27,7 +27,67 @@ public class Neetcode {
 //        Node<Integer> head2 = ll.takeInput();
 //        getIntersectionNode(head1, head2);
 //        getIntersectionNodeOptimized(head1, head2);
+        
+//        todo https://leetcode.com/problems/reorder-list/
+//        ll.printLL(reOrderLList(head));
 
+//        todo https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list/
+        maximumTwinSum(head);
+
+    }
+
+    private static int maximumTwinSum(Node<Integer> head) {
+        if (head == null) return 0;
+        Node<Integer> middle = getMiddleOfLL(head);
+        Node<Integer> rHead = reverseLL(middle);
+
+        int max = -1;
+        while (head.next != null){
+            max = Math.max(max, head.data+rHead.data);
+            head = head.next;
+            rHead = rHead.next;
+        }
+        return max;
+     }
+
+    private static Node<Integer> reOrderLList(Node<Integer> head) {
+        if (head == null || head.next == null) return head;
+//        get the middle of LL
+        Node<Integer> middle = getMiddleOfLL(head);
+
+        Node<Integer> rHead = reverseLL(middle);
+        Node<Integer> temp = new Node<>(0), finalHead = temp;
+
+        while (true){
+            temp.next = head;
+            temp = temp.next;
+            head = head.next;
+
+            temp.next = rHead;
+            temp = temp.next;
+            rHead = rHead.next;
+
+            if (head == rHead) {
+                temp.next = rHead;
+                temp = temp.next;
+                break;
+            }
+
+            if (temp == head) break;
+        }
+
+        temp.next = null;
+        return finalHead.next;
+    }
+
+    private static Node<Integer> getMiddleOfLL(Node<Integer> head) {
+        Node<Integer> slow = head, fast = head;
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        //slow is the middle
+        return slow;
     }
 
     private static Node<Integer> getIntersectionNodeOptimized(Node<Integer> head1, Node<Integer> head2) {

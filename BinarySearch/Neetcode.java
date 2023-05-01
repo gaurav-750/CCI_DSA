@@ -44,9 +44,10 @@ public class Neetcode {
 //        searchRange(arr, 8);
 
 //        todo https://leetcode.com/problems/search-suggestions-system/
-        String[] products = {"mobile","mouse","moneypot","monitor","mousepad"};
-        String searchWord = "mouse";
-        System.out.println(searchSuggestion(products, searchWord));
+//        String[] products = {"mobile","mouse","moneypot","monitor","mousepad"};
+//        String searchWord = "mouse";
+//        System.out.println(searchSuggestion(products, searchWord));
+
 
     }
 
