@@ -65,18 +65,79 @@ public class Neetcode {
 //        ll.printLL(swapNodesInPairs(head));
 
 //        todo https://leetcode.com/problems/partition-list/
-        partitionList(head, 3);
+//        ll.printLL(partitionList(head, 3));
+//        ll.printLL(partitionListOptimized(head, 3));
 
+//        todo https://leetcode.com/problems/rotate-list/
+        ll.printLL(rotateList(head, 2));
 
+    }
+
+    private static Node<Integer> rotateList(Node<Integer> head, int k) {
+        if (head == null || head.next == null || k == 0) return head;
+
+        int len = lengthOfLL(head);
+        Node<Integer> temp =head, tail = head;
+        k = k%len;
+        while (k != 0){
+            tail = tail.next;
+            k--;
+        }
+
+        while (tail.next != null){
+            temp = temp.next;
+            tail = tail.next;
+        }
+
+        tail.next = head;
+        Node<Integer> res = temp.next;
+        temp.next = null;
+        return res;
+    }
+
+    private static Node<Integer> partitionListOptimized(Node<Integer> head, int x) {
+        if (head == null) return null;
+        Node<Integer> left = new Node<>(0), right = new Node<>(0);
+        Node<Integer> lTail = left, rTail = right;
+
+        while (head != null){
+            if (head.data < x){
+                lTail.next = head;
+                lTail = lTail.next;
+            }else {
+                rTail.next = head;
+                rTail = rTail.next;
+            }
+            head = head.next;
+        }
+
+        lTail.next = right.next;
+        rTail.next = null;
+        return left.next;
     }
 
     private static Node<Integer> partitionList(Node<Integer> head, int x) {
         if (head == null) return null;
         ArrayList<Node<Integer>> list = new ArrayList<>();
+        Node<Integer> dummy = new Node<>(0), temp = dummy;
 
-        
+        while (head != null){
+            if (head.data >= x)
+                list.add(head);
+            else {
+                temp.next = head;
+                temp = temp.next;
+            }
+            head = head.next;
+        }
 
-
+//        add the elements from the list
+        for (Node<Integer> node : list) {
+            temp.next = node;
+            temp = temp.next;
+        }
+        temp.next = null;
+        return dummy.next;
     }
 
     private static Node<Integer> swapNodesInPairs(Node<Integer> head) {
