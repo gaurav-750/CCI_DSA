@@ -1,5 +1,6 @@
 package LinkedList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -38,9 +39,85 @@ public class Neetcode {
 //        ll.printLL(removeNthNodeFromEnd(head, 1));
 //        removeNthNodeFromEndOptimized(head, 2);
 
-//        todo 
+//        todo https://leetcode.com/problems/design-linked-list/
+//        MyLinkedList myLL = new MyLinkedList();
+//        myLL.addToHead(7);
+//        myLL.addToHead(2);
+//        myLL.addToHead(1);
+//        myLL.addAtIndex(3,0);
+//        myLL.print();
+//
+//        myLL.deleteAtIndex(2);
+//        myLL.addToHead(6);
+//        myLL.addToTail(4);
+//        System.out.println(myLL.get(4));
+//        myLL.addToHead(4);
+//        myLL.addAtIndex(5,0);
+//        myLL.addToHead(6);
+//
+//        myLL.print();
+
+//        todo https://leetcode.com/problems/add-two-numbers/description/
+//        Node<Integer> head2 = ll.takeInput();
+//        ll.printLL(addTwoNumbers(head, head2));
+
+//        todo https://leetcode.com/problems/swap-nodes-in-pairs/
+//        ll.printLL(swapNodesInPairs(head));
+
+//        todo https://leetcode.com/problems/partition-list/
+        partitionList(head, 3);
 
 
+    }
+
+    private static Node<Integer> partitionList(Node<Integer> head, int x) {
+        if (head == null) return null;
+        ArrayList<Node<Integer>> list = new ArrayList<>();
+
+        
+
+
+    }
+
+    private static Node<Integer> swapNodesInPairs(Node<Integer> head) {
+        //base case
+        if (head == null || head.next == null)
+            return head;
+
+        Node<Integer> temp = head.next, future = temp.next;
+        temp.next = head;
+        head.next = null;
+
+        head.next = swapNodesInPairs(future);
+        return temp;
+    }
+
+    private static Node<Integer> addTwoNumbers(Node<Integer> head1, Node<Integer> head2) {
+        Node<Integer> dummy = new Node<>(0), cur = dummy;
+
+        int carry = 0;
+        while (head1 != null || head2 != null || carry != 0){
+            int sum = 0;
+            if (head1 != null) {
+                sum += head1.data;
+                head1 = head1.next;
+            }
+
+            if (head2 != null) {
+                sum += head2.data;
+                head2 = head2.next;
+            }
+
+            sum += carry;
+            //sum = 18
+            carry = sum/10;
+            sum = sum % 10;
+            cur.next = new Node<>(sum);
+
+            cur = cur.next;
+        }
+
+        return dummy.next;
     }
 
 //    private static Node<Integer> removeNthNodeFromEndOptimized(Node<Integer> head, int n) {
