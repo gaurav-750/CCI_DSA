@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {0,3,7,2,5,8,4,6,0,1};
+        int[] arr = {2,0,2,1,1,0};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -80,9 +80,31 @@ public class Neetcode {
 //        productExceptSelfOptimized(arr);
 
 //        todo https://leetcode.com/problems/longest-consecutive-sequence/description/
-        longestConsecutive(arr);
+//        longestConsecutive(arr);
 
+//        todo https://leetcode.com/problems/sort-colors/
+        sortColors(arr);
 
+    }
+
+    private static void sortColors(int[] arr) {
+//        Dutch National Flag Algorithm
+        int low = 0, mid = 0, high = arr.length-1;
+
+        while (mid <= high){
+            if (arr[mid] == 0){
+                swap(arr, low, mid);
+                low++;
+                mid++;
+            }else if (arr[mid] == 1){
+                mid++;
+            }else { //arr[mid] == 2
+                swap(arr, mid, high);
+                high--;
+            }
+        }
+
+//        System.out.println(Arrays.toString(arr));
     }
 
     private static int longestConsecutive(int[] arr) {

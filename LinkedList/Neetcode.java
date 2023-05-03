@@ -69,8 +69,41 @@ public class Neetcode {
 //        ll.printLL(partitionListOptimized(head, 3));
 
 //        todo https://leetcode.com/problems/rotate-list/
-        ll.printLL(rotateList(head, 2));
+//        ll.printLL(rotateList(head, 2));
 
+//        todo https://leetcode.com/problems/reverse-linked-list-ii/
+        ll.printLL(reverseLinkedList2(head, 1, 1));
+
+
+    }
+
+    private static Node<Integer> reverseLinkedList2(Node<Integer> head, int left, int right) {
+        if (head.next == null) return head;
+
+        //Phase 1 - Create a dummy node, Put the pointers on position
+        Node<Integer> dummy = new Node<>(0); dummy.next = head;
+        Node<Integer> leftPrev = dummy, cur = head, prev = null;
+        int i = 0;
+        while (i < (left-1)){
+            leftPrev= leftPrev.next;
+            cur = cur.next;
+            i++;
+        }
+
+        //Phase 2 - reverse the linked list from left-right
+        i = 0;
+        while (i < (right-left+1)){
+            Node<Integer> future = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = future;
+            i++;
+        }
+
+        //Phase 3 - Update the pointers
+        leftPrev.next.next = cur;
+        leftPrev.next = prev;
+        return dummy.next;
     }
 
     private static Node<Integer> rotateList(Node<Integer> head, int k) {
