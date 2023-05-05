@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
 
         BinaryTree bt = new BinaryTree();
-        BinaryTreeNode<Integer> root = bt.takeInput();
+        TreeNode<Integer> root = bt.takeInput();
         bt.printBinaryTree(root);
 
 //        todo Preorder Traversal
@@ -49,13 +49,13 @@ public class Main {
 //        System.out.println("Diameter of Binary Tree: " + diameter(root).diam);
 
 //        todo https://leetcode.com/problems/subtree-of-another-tree/
-        BinaryTreeNode<Integer> subRoot = bt.takeInput();
+        TreeNode<Integer> subRoot = bt.takeInput();
         System.out.println("Is SubTree: " + isSubTree(root, subRoot));
 
 
     }
 
-    private static boolean isSubTree(BinaryTreeNode<Integer> root, BinaryTreeNode<Integer> subRoot) {
+    private static boolean isSubTree(TreeNode<Integer> root, TreeNode<Integer> subRoot) {
         if (subRoot == null) return true;
         if (root == null)
             return false;
@@ -69,7 +69,7 @@ public class Main {
         return isSubTree(root.left, subRoot) || isSubTree(root.right, subRoot);
     }
 
-    private static boolean isIdentical(BinaryTreeNode<Integer> root, BinaryTreeNode<Integer> subRoot) {
+    private static boolean isIdentical(TreeNode<Integer> root, TreeNode<Integer> subRoot) {
 //        base case
         if (root == null && subRoot == null)
             return true;
@@ -80,7 +80,7 @@ public class Main {
                 isIdentical(root.left, subRoot.left) && isIdentical(root.right, subRoot.right);
     }
 
-    private static Diam diameter(BinaryTreeNode<Integer> root) {
+    private static Diam diameter(TreeNode<Integer> root) {
 //        base case
         if (root == null)
             return new Diam(0,0);
@@ -94,7 +94,7 @@ public class Main {
         return new Diam(maxD, h);
     }
 
-    private static int diameterOfBTree(BinaryTreeNode<Integer> root) {
+    private static int diameterOfBTree(TreeNode<Integer> root) {
 //        base case
         if (root == null) return 0;
 
@@ -105,7 +105,7 @@ public class Main {
         return Math.max(Math.max(leftDiameter, rightDiameter), rootDiameter);
     }
 
-    private static int heightOfBTree(BinaryTreeNode<Integer> root) {
+    private static int heightOfBTree(TreeNode<Integer> root) {
         if (root == null) return 0;
         if (root.left == null && root.right == null)
             return 1;
@@ -113,7 +113,7 @@ public class Main {
         return Math.max(heightOfBTree(root.left), heightOfBTree(root.right)) + 1;
     }
 
-    private static int sumOfNodes(BinaryTreeNode<Integer> root) {
+    private static int sumOfNodes(TreeNode<Integer> root) {
         if (root == null) return 0;
         if (root.left == null && root.right == null)
             return root.data;
@@ -121,20 +121,20 @@ public class Main {
          return root.data + sumOfNodes(root.left) + sumOfNodes(root.right);
     }
 
-    private static int countNodes(BinaryTreeNode<Integer> root) {
+    private static int countNodes(TreeNode<Integer> root) {
         if (root == null) return 0;
 
         return countNodes(root.left) + countNodes(root.right) + 1;
     }
 
-    private static void levelOrder(BinaryTreeNode<Integer> root) {
-        Queue<BinaryTreeNode<Integer>> queue = new LinkedList<>();
+    private static void levelOrder(TreeNode<Integer> root) {
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
         queue.add(root);
 
         while (!queue.isEmpty()){
-            ArrayList<BinaryTreeNode<Integer>> list = new ArrayList<>();
+            ArrayList<TreeNode<Integer>> list = new ArrayList<>();
             while (!queue.isEmpty()){
-                BinaryTreeNode<Integer> frontNode = queue.poll();
+                TreeNode<Integer> frontNode = queue.poll();
                 System.out.print(frontNode.data + " ");
 
                 if (frontNode.left != null)
@@ -147,7 +147,7 @@ public class Main {
         }
     }
 
-    private static void postOrder(BinaryTreeNode<Integer> root) {
+    private static void postOrder(TreeNode<Integer> root) {
         if (root == null)
             return;
 
@@ -156,7 +156,7 @@ public class Main {
         System.out.print(root.data + " ");
     }
 
-    private static void inOrder(BinaryTreeNode<Integer> root) {
+    private static void inOrder(TreeNode<Integer> root) {
         if (root == null)
             return;
 
@@ -165,7 +165,7 @@ public class Main {
         inOrder(root.right);
     }
 
-    private static void preOrder(BinaryTreeNode<Integer> root) {
+    private static void preOrder(TreeNode<Integer> root) {
         if (root == null)
             return;
 
