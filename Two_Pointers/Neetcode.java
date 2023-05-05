@@ -7,7 +7,7 @@ import java.util.Map;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {1,1,1,2,2,2,3,3};
+        int[] arr = {1,2,3,4,4,9,56,90};
 
 //        todo https://leetcode.com/problems/valid-palindrome/
 //        System.out.println("Is Palindrome: " + isPalindrome("A man, a plan, a canal: Panama"));
@@ -34,9 +34,64 @@ public class Neetcode {
 //        todo https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
 //        System.out.println("Ans: " + removeDuplicates2(arr));
 
-        
+//        todo https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+//        System.out.println(Arrays.toString(twoSum2(arr, 8)));
+//        System.out.println(Arrays.toString(twoSum2Optimized(arr, 8)));
+
+//        todo https://leetcode.com/problems/rotate-array/
+        rotateArray(arr, 3);
 
 
+
+    }
+
+    private static int[] twoSum2Optimized(int[] arr, int x) {
+        //opposite side se left and right counter.
+        //2 conditions kaafi intuitive hai
+        int l = 0, r = arr.length-1;
+
+        while (l < r){
+            int currSum = arr[l] + arr[r];
+
+            if (currSum > x)
+                r--;
+            else if (currSum < x)
+                l++;
+            else //target found
+                return new int[]{l+1,r+1};
+        }
+        return new int[]{-1,-1};
+    }
+
+    private static int search(int[] arr, int x) {
+        int s = 0, e = arr.length-1;
+
+        while (s <= e){
+            int mid = (s+e)/2;
+            if (arr[mid] == x)
+                return mid;
+            else if (arr[mid] > x)
+                e = mid-1;
+            else
+                s = mid+1;
+        }
+        return -1;
+    }
+
+    private static int[] twoSum2(int[] arr, int x) {
+        int[] res = new int[2];
+        for (int i = 0; i < arr.length; i++){
+            int elemToBeAdded = x-arr[i];
+
+            int index = search(arr, elemToBeAdded);
+            if (index != -1 && index != i){
+                res[0] = i+1; res[1] = index+1;
+                Arrays.sort(res);
+                return res;
+            }
+        }
+
+        return res;
     }
 
     private static int removeDuplicates2(int[] arr) {
