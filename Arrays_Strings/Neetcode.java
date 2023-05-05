@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {2,0,2,1,1,0};
+        int[] arr = {0,1,0,3,12};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -83,9 +83,14 @@ public class Neetcode {
 //        longestConsecutive(arr);
 
 //        todo https://leetcode.com/problems/sort-colors/
-        sortColors(arr);
+//        sortColors(arr);
+
+
+
 
     }
+
+
 
     private static void sortColors(int[] arr) {
 //        Dutch National Flag Algorithm
