@@ -1,13 +1,12 @@
 package Two_Pointers;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOError;
+import java.util.*;
 
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {1,2,3,4,5,6,7};
+        int[] arr = {-3,3,4,-3,1,2};
 
 //        todo https://leetcode.com/problems/valid-palindrome/
 //        System.out.println("Is Palindrome: " + isPalindrome("A man, a plan, a canal: Panama"));
@@ -42,11 +41,69 @@ public class Neetcode {
 //        rotateArray(arr, 3);
 
 //        todo https://leetcode.com/problems/container-with-most-water/
-        int[] heights = {1,8,6,2,5,4,8,3,7};
-        System.out.println("Max Area: " + containerWithMostWater(heights));
+//        int[] heights = {1,8,6,2,5,4,8,3,7};
+//        System.out.println("Max Area: " + containerWithMostWater(heights));
+
+//        todo https://leetcode.com/problems/boats-to-save-people/
+//        int[] weights = {3,5,3,4};
+//        System.out.println("Number of rescue boats: " + numberOfRescueBoats(weights, 5));
+
+//        todo https://leetcode.com/problems/3sum/
+        threeSum(arr);
 
 
+    }
 
+    private static List<List<Integer>> threeSum(int[] arr) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(arr);
+
+        for (int i = 0; i < arr.length; i++) {
+            if (i > 0 && arr[i] == arr[i-1])
+                continue;
+
+            int a = arr[i];
+            int l = i+1, r = arr.length-1;
+            while (l < r){
+                //This is just two sum with sorted array (we've solved this problem) -> O(n)
+                int threeSum = a + arr[l] + arr[r];
+                if (threeSum > 0)
+                    r--;
+                else if (threeSum < 0)
+                    l++;
+                else { //threeSum = 0
+                    res.add(new ArrayList<>(Arrays.asList(a, arr[l], arr[r]))); //add the solution
+
+                    //there may be multiple solution with the current a -> increment l
+                    l+=1;
+                    while (arr[l] == arr[l-1] && l < r) //since we do not want the same solution
+                        l++;
+                }
+
+            }
+        }
+//        System.out.println(res);
+        return res;
+    }
+
+    private static int numberOfRescueBoats(int[] weights, int limit) {
+        int l = 0, r = weights.length-1;
+        int totalRescueBoats = 0;
+        Arrays.sort(weights);
+
+        while (l < r){
+            int totalWeight = weights[l] + weights[r];
+
+            if (totalWeight <= limit) {
+                l++;
+                r--;
+            }else if (weights[l] > weights[r])
+                l++;
+            else //r >= l
+                r--;
+            totalRescueBoats++;
+        }
+        return l==r ? totalRescueBoats+1 : totalRescueBoats;
     }
 
     private static int containerWithMostWater(int[] heights) {
