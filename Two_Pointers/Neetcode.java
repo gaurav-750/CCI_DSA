@@ -7,7 +7,7 @@ import java.util.Map;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {1,2,3,4,4,9,56,90};
+        int[] arr = {1,2,3,4,5,6,7};
 
 //        todo https://leetcode.com/problems/valid-palindrome/
 //        System.out.println("Is Palindrome: " + isPalindrome("A man, a plan, a canal: Panama"));
@@ -39,10 +39,53 @@ public class Neetcode {
 //        System.out.println(Arrays.toString(twoSum2Optimized(arr, 8)));
 
 //        todo https://leetcode.com/problems/rotate-array/
-        rotateArray(arr, 3);
+//        rotateArray(arr, 3);
+
+//        todo https://leetcode.com/problems/container-with-most-water/
+        int[] heights = {1,8,6,2,5,4,8,3,7};
+        System.out.println("Max Area: " + containerWithMostWater(heights));
 
 
 
+    }
+
+    private static int containerWithMostWater(int[] heights) {
+        int l = 0, r = heights.length-1;
+        int maxArea = -1;
+
+        while (l < r){
+            int currentArea = (r-l) * Math.min(heights[l], heights[r]);
+            maxArea = Math.max(maxArea, currentArea);
+
+            if (heights[l] < heights[r])
+                l++;
+            else //r > l
+                r--;
+        }
+        return maxArea;
+    }
+
+    //Basic Approach to O(n) extra memory lega
+    //Optimized Approach -> O(1) extra memory
+    private static void rotateArray(int[] arr, int k) {
+    // 1. Reverse the complete array
+    // 2. Reverse the 1st k elements, then reverse the remaining elements
+
+        k = k%(arr.length);
+        reverseArray(arr, 0, arr.length-1);
+        reverseArray(arr, 0, k-1);
+        reverseArray(arr, k, arr.length-1);
+//        System.out.println(Arrays.toString(arr));
+    }
+
+    private static void reverseArray(int[] arr, int l, int r) {
+        while (l < r){
+            int temp = arr[r];
+            arr[r] = arr[l];
+            arr[l] = temp;
+            l++;
+            r--;
+        }
     }
 
     private static int[] twoSum2Optimized(int[] arr, int x) {
