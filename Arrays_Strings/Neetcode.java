@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {0,1,0,3,12};
+        int[] arr = {2,2,2,2,5,5,5,8};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -86,11 +86,96 @@ public class Neetcode {
 //        sortColors(arr);
 
 
+//        todo Sliding Window
+//        todo https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+//        int[] prices = {7,6,4,3,1};
+//        System.out.println("Maximum Profit in Stocks: " + maximumProfit(prices));
+
+//        todo https://leetcode.com/problems/contains-duplicate-ii/
+//        System.out.println("Contains nearby duplicates: " + containsNearbyDuplicate(arr, 2));
+//        containsNearbyDuplicateOptimized(arr, 3);
+
+//        todo https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/
+        System.out.println("Number of sub arrays: " + numOfSubarrays(arr, 3, 4));
 
 
     }
 
+    private static int numOfSubarrays(int[] arr, int k, int threshold) {
+        int l = 0, r = k-1, res = 0;
+        int sum = 0;
+        for (int i = 0; i < k; i++) {
+            sum += arr[i];
+        }
 
+        while (r < arr.length){
+            if (getAverage(sum, k) >= threshold)
+                res++;
+
+            sum -= arr[l];
+            l++; r++; //take the window ahead
+
+            if (r < arr.length)
+                sum += arr[r];
+        }
+        return res;
+    }
+
+    private static int getAverage(int sum, int k) {
+        return sum/k;
+    }
+
+    private static boolean containsNearbyDuplicateOptimized(int[] arr, int k) {
+        HashSet<Integer> set = new HashSet<>();
+        int l = 0;
+        for (int r = 0; r < arr.length; r++) {
+            if (r-l > k) { //window is more than k, remove element at l, l += 1
+                set.remove(arr[l]);
+                l++;
+            }
+
+            int currElem = arr[r];
+            if (set.contains(currElem))
+                return true;
+            set.add(currElem);
+        }
+        return false;
+    }
+
+    private static boolean containsNearbyDuplicate(int[] arr, int k) {
+        int i = 0, j = 1, l;
+        while (j < arr.length){
+            l = 0;
+            while (l < k){
+                System.out.println(i + ", " + j);
+                if (j < arr.length && arr[i] == arr[j])
+                    return true;
+                j++;l++;
+            }
+
+            i++;
+            j = i+1;//j = i+1
+        }
+
+        return false;
+    }
+
+    private static int maximumProfit(int[] prices) {
+        int maxProfit = 0, i = 0, j = 1;
+        //i - buy, j - sell
+
+        while (j < prices.length){
+            if (prices[i] <= prices[j]){
+                int currentProfit = prices[j] - prices[i];
+                maxProfit = Math.max(maxProfit, currentProfit);
+            }else { //matlab kam bhav me stock mil raha
+                i = j;
+            }
+            j++;
+        }
+
+        return maxProfit;
+    }
 
     private static void sortColors(int[] arr) {
 //        Dutch National Flag Algorithm
