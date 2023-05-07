@@ -5,7 +5,7 @@ import java.util.*;
 public class Neetcode {
     public static void main(String[] args) {
 
-        int[] arr = {2,2,2,2,5,5,5,8};
+        int[] arr = {0,1,1,1,2,3,6,7,8,9};
 
 //        todo https://leetcode.com/problems/contains-duplicate/
 //        containsDuplicate(arr);
@@ -106,12 +106,66 @@ public class Neetcode {
 //                characterReplacement("ABABBA", 2));
 
 //        todo https://leetcode.com/problems/permutation-in-string/
-        System.out.println("s2 contains a permutations of s1: " +
-                checkInclusion("adc", "dcda"));
+//        System.out.println("s2 contains a permutations of s1: " +
+//                checkInclusion("adc", "dcda"));
+
+//        todo https://leetcode.com/problems/frequency-of-the-most-frequent-element/
+        //NOT DONE
+//        System.out.println("Maximum frequency of an element: " +
+//                maxFrequency(arr, 2));
+
+//        todo https://leetcode.com/problems/find-k-closest-elements/
+        System.out.println("K closest elements: " + findKClosestElementsToX(arr, 9, 4));
 
 
     }
 
+    private static List<Integer> findKClosestElementsToX(int[] arr, int k, int x) {
+        PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
+                (a, b) -> {
+                    if (Objects.equals(a.getValue(), b.getValue()))
+                        return a.getKey()-b.getKey();
+                    return a.getValue()-b.getValue();
+                });
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        //arr=[1,2,3,4,5], x = 3, k = 4
+        for (int elem: arr) {
+            if (!map.containsKey(elem))
+                map.put(elem, Math.abs(elem - x));
+        }
+
+        minHeap.addAll(map.entrySet());
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < k && !minHeap.isEmpty(); i++) {
+            res.add(minHeap.poll().getKey());
+        }
+
+        Collections.sort(res);
+        return res;
+    }
+
+    private static int maxFrequency(int[] arr, int k) {
+        Arrays.sort(arr);
+        int l = 0, r = 0;
+        int maxLenWindow = 1;
+        int total = arr[0];
+
+        while (r < arr.length){
+
+            while ( r < arr.length &&
+                    arr[r] * (r-l+1) <=  (total+k)){
+                r++;
+                if (r < arr.length)
+                    total += arr[r];
+            }
+
+            total -= arr[l];
+            l++;
+            maxLenWindow = Math.max(maxLenWindow, r-l+1);
+        }
+        return maxLenWindow;
+    }
 
     //return true if s2 contains a permutation of s1.
     //HashMap Approach
@@ -131,7 +185,6 @@ public class Neetcode {
         }
 
         while (r < s2.length()){
-            System.out.println(map2);
             if (map1.equals(map2))
                 return true;
 
