@@ -96,9 +96,97 @@ public class Neetcode {
 //        containsNearbyDuplicateOptimized(arr, 3);
 
 //        todo https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/
-        System.out.println("Number of sub arrays: " + numOfSubarrays(arr, 3, 4));
+//        System.out.println("Number of sub arrays: " + numOfSubarrays(arr, 3, 4));
+
+//        todo https://leetcode.com/problems/longest-substring-without-repeating-characters/
+//        System.out.println("Length of longest substring: " + lengthOfLongestSubString("pwwkew"));
+
+//        todo https://leetcode.com/problems/longest-repeating-character-replacement/
+//        System.out.println("Longest repeating character after replacement: " +
+//                characterReplacement("ABABBA", 2));
+
+//        todo https://leetcode.com/problems/permutation-in-string/
+        System.out.println("s2 contains a permutations of s1: " +
+                checkInclusion("adc", "dcda"));
 
 
+    }
+
+
+    //return true if s2 contains a permutation of s1.
+    //HashMap Approach
+    private static boolean checkInclusion(String s1, String s2) {
+        if (s2.length() < s1.length())
+            return false;
+
+        HashMap<Character, Integer> map1 = new HashMap<>(),
+                                    map2 = new HashMap<>();
+        for (int i = 0; i < s1.length(); i++) {
+            map1.put(s1.charAt(i), map1.getOrDefault(s1.charAt(i), 0) + 1);
+        }
+
+        int l = 0, r = s1.length()-1;
+        for (int i = 0; i < s1.length(); i++) {
+            map2.put(s2.charAt(i), map2.getOrDefault(s2.charAt(i), 0) + 1);
+        }
+
+        while (r < s2.length()){
+            System.out.println(map2);
+            if (map1.equals(map2))
+                return true;
+
+            if (map2.get(s2.charAt(l)) == 1)
+                map2.remove(s2.charAt(l));
+            else //matlab multiple occurrences hai is character k
+                map2.put(s2.charAt(l), map2.get(s2.charAt(l))-1);
+            l++; r++;
+
+            if (r < s2.length())
+                map2.put(s2.charAt(r), map2.getOrDefault(s2.charAt(r), 0) + 1);
+        }
+        return false;
+    }
+
+    private static int characterReplacement(String s, int k) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int maxLenSubstring = 0, l = 0, r = 0;
+
+        while (r < s.length()){
+            char c = s.charAt(r); //current char
+            map.put(c, map.getOrDefault(c, 0) + 1);
+
+            //condition => (len - max.freq char) <= k
+            Map.Entry<Character, Integer> maxValueEntry = Collections.max(map.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue());
+            if ((r-l+1) - maxValueEntry.getValue() > k){
+                map.put(s.charAt(l), map.get(s.charAt(l))-1);
+                l++;
+            }
+
+            //update the max length
+            maxLenSubstring = Math.max(maxLenSubstring, r-l+1);
+            r++;
+//            System.out.println(map);
+        }
+        return maxLenSubstring;
+    }
+
+    private static int lengthOfLongestSubString(String str) {
+        HashSet<Character> set = new HashSet<>();
+        int l = 0, r = 0, maxLength = 0;
+
+        while (r < str.length()){
+            char c = str.charAt(r); //current char
+            //if set contains char at r, keep removing char from l
+            while (set.contains(c)){
+                set.remove(str.charAt(l));
+                l++;
+            }
+
+            set.add(str.charAt(r));
+            maxLength = Math.max(maxLength, r-l+1);
+            r++;
+        }
+        return maxLength;
     }
 
     private static int numOfSubarrays(int[] arr, int k, int threshold) {
