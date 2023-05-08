@@ -57,11 +57,49 @@ public class NeetCode {
 //        System.out.println("Has Path Sum: " + hasPathSum(root, 22));
 
 //        todo https://leetcode.com/problems/construct-string-from-binary-tree/description/
-        buildString(root);
-        System.out.println(res);
+//        buildString(root);
+//        System.out.println(res);
+
+//        todo https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+//        System.out.println("Lowest Common Ancestor: " + lcaOfBinaryTree(root, 4, 5).data);
+
+//        todo https://leetcode.com/problems/insert-into-a-binary-search-tree/
+//        bt.printBinaryTree(insertIntoBST(root, 5));
+
+    
 
 
 
+    }
+
+    private static TreeNode<Integer> insertIntoBST(TreeNode<Integer> root, int val) {
+//        base case
+        if (root == null)
+            return new TreeNode<>(val);
+
+        if (val < root.data) {//go left
+            root.left = insertIntoBST(root.left, val);
+            return root;
+        }
+
+        //go right
+        root.right = insertIntoBST(root.right, val);
+        return root;
+    }
+
+    private static TreeNode<Integer> lcaOfBinaryTree(TreeNode<Integer> root, int p, int q) {
+        if (p == root.data || q == root.data)
+            return root;
+
+        if (p < root.data && q > root.data ||
+            p > root.data && q < root.data)
+            return root;
+
+        if (p < root.data && q < root.data)
+            return lcaOfBinaryTree(root.left, p, q);
+
+        // p >= q > root.data
+        return lcaOfBinaryTree(root.right, p, q);
     }
 
     static String res = "";
