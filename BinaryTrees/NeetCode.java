@@ -12,6 +12,18 @@ class Balanced{
     }
 }
 
+class BSTReturn{
+    boolean isBST;
+    int min;
+    int max;
+
+    public BSTReturn(boolean isBST, int min, int max) {
+        this.isBST = isBST;
+        this.min = min;
+        this.max = max;
+    }
+}
+
 public class NeetCode {
     public static void main(String[] args) {
 
@@ -74,11 +86,41 @@ public class NeetCode {
 
 //        todo https://leetcode.com/problems/count-good-nodes-in-binary-tree/
 //        System.out.println("Number of good nodes: " + goodNodes(root));
-        
+
+//        todo https://leetcode.com/problems/validate-binary-search-tree/
+        System.out.println("Is BST Valid: " + isValidBST(root).isBST);
 
 
 
 
+    }
+
+    private static BSTReturn isValidBST(TreeNode<Integer> root) {
+//        base case
+        if (root == null)
+            return new BSTReturn(true, Integer.MAX_VALUE, Integer.MIN_VALUE);
+
+        //leaf node
+        if (root.left == null && root.right == null)
+            return new BSTReturn(true, root.data, root.data);
+
+
+        BSTReturn left = isValidBST(root.left);
+        BSTReturn right = isValidBST(root.right);
+
+        boolean isBST = true;
+        //check the conditions
+        if (root.data <= left.max && root.data != Integer.MIN_VALUE)
+            isBST = false;
+        if (root.data >= right.min && root.data != Integer.MAX_VALUE)
+            isBST = false;
+
+        if (!left.isBST || !right.isBST)
+            isBST = false;
+
+        int min = Math.min(Math.min(left.min, right.min), root.data);
+        int max = Math.max(Math.max(left.max, right.max), root.data);
+        return new BSTReturn(isBST, min, max);
     }
 
     private static int goodNodes(TreeNode<Integer> root) {
