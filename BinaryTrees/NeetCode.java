@@ -1,6 +1,6 @@
 package BinaryTrees;
 
-import java.util.Stack;
+import java.util.*;
 
 class Balanced{
     boolean isBalanced;
@@ -66,10 +66,91 @@ public class NeetCode {
 //        todo https://leetcode.com/problems/insert-into-a-binary-search-tree/
 //        bt.printBinaryTree(insertIntoBST(root, 5));
 
-    
+//        todo https://leetcode.com/problems/binary-tree-level-order-traversal/
+//        levelOrderBinaryTree(root);
+
+//        todo https://leetcode.com/problems/binary-tree-right-side-view/description/
+//        System.out.println("Right side view: " + rightSideView(root));
+
+//        todo https://leetcode.com/problems/count-good-nodes-in-binary-tree/
+//        System.out.println("Number of good nodes: " + goodNodes(root));
+        
 
 
 
+
+    }
+
+    private static int goodNodes(TreeNode<Integer> root) {
+        return helperGoodNodes(root, root.data);
+    }
+
+    private static int helperGoodNodes(TreeNode<Integer> root, int max) {
+//        base case
+        if (root == null)
+            return 0;
+
+        int count = 0;
+        if (root.data >= max) {
+            count++;
+            max = root.data;
+        }
+
+        count += helperGoodNodes(root.left, max);
+        count += helperGoodNodes(root.right, max);
+        return count;
+    }
+
+    private static List<Integer> rightSideView(TreeNode<Integer> root) {
+        if (root == null)
+            return new ArrayList<>();
+
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.add(root);
+        List<Integer> res = new ArrayList<>(); //result list
+
+        while (!queue.isEmpty()){
+            int n = queue.size();
+            while (n != 0){
+                TreeNode<Integer> node = queue.poll();
+                if (n == 1)
+                    res.add(node.data);
+
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+                n--;
+            }
+        }
+        return res;
+    }
+
+    private static List<List<Integer>> levelOrderBinaryTree(TreeNode<Integer> root) {
+        if (root == null)
+            return null;
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.add(root);
+        List<List<Integer>> list = new ArrayList<>(); //result
+
+        while (!queue.isEmpty()){
+            int n = queue.size();
+            List<Integer> innerList = new ArrayList<>();
+            while (n != 0){ //this loop will only run for one level
+                TreeNode<Integer> node = queue.poll();
+                innerList.add(node.data);
+
+                //add the nodes to the queue for the next level
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+                n--;
+            }
+            list.add(innerList);
+        }
+
+        return list;
     }
 
     private static TreeNode<Integer> insertIntoBST(TreeNode<Integer> root, int val) {
