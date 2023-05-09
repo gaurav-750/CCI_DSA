@@ -88,11 +88,76 @@ public class NeetCode {
 //        System.out.println("Number of good nodes: " + goodNodes(root));
 
 //        todo https://leetcode.com/problems/validate-binary-search-tree/
-        System.out.println("Is BST Valid: " + isValidBST(root).isBST);
+//        System.out.println("Is BST Valid: " + isValidBST(root).isBST);
+
+//        todo https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+//        kthSmallestElementinBST(root, 2);
+//        System.out.println("Kth smallest element: " + kthSmallestElementinBST2(root, 2));
+
+//        todo https://leetcode.com/problems/sum-root-to-leaf-numbers/
+//        System.out.println("Sum root to leaf numbers: " + sumRootToLeafNumbers(root));
+
+        
 
 
+    }
 
+    static int total = 0;
+    private static int sumRootToLeafNumbers(TreeNode<Integer> root) {
+        helperSumNumbers(root, 0);
+        return total;
+    }
 
+    private static void helperSumNumbers(TreeNode<Integer> root, int num) {
+//        base case
+        if (root == null) return;
+
+        num = (num * 10)+root.data;
+        if (root.left == null && root.right == null) { //leaf node
+            total += num;
+            return;
+        }
+
+        helperSumNumbers(root.left, num);
+        helperSumNumbers(root.right, num);
+    }
+
+    private static int kthSmallestElementinBST2(TreeNode<Integer> root, int k) {
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        stack.add(root);
+        TreeNode<Integer> curr = root;
+        int n = 0;
+
+        while (curr != null || !stack.isEmpty()){
+            while (curr != null){
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            curr = stack.pop();
+            n++;
+            if (n == k)
+                return curr.data;
+
+            curr = curr.right;
+        }
+        return -1;
+    }
+
+    private static int kthSmallestElementinBST(TreeNode<Integer> root, int k) {
+        ArrayList<Integer> list = new ArrayList<>();
+        inorder(root, list);
+        return list.get(k-1);
+    }
+
+    private static void inorder(TreeNode<Integer> root, ArrayList<Integer> list) {
+//        base case
+        if (root == null)
+            return;
+
+        inorder(root.left, list);
+        list.add(root.data);
+        inorder(root.right, list);
     }
 
     private static BSTReturn isValidBST(TreeNode<Integer> root) {
