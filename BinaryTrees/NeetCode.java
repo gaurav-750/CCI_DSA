@@ -24,6 +24,27 @@ class BSTReturn{
     }
 }
 
+class Rob{
+    int withRoot;
+    int withoutRoot;
+
+    public Rob(int withRoot, int withoutRoot) {
+        this.withRoot = withRoot;
+        this.withoutRoot = withoutRoot;
+    }
+}
+
+class Bottom{
+    int val;
+    int height;
+
+    public Bottom(int val, int height) {
+        this.val = val;
+        this.height = height;
+    }
+}
+
+
 public class NeetCode {
     public static void main(String[] args) {
 
@@ -97,9 +118,112 @@ public class NeetCode {
 //        todo https://leetcode.com/problems/sum-root-to-leaf-numbers/
 //        System.out.println("Sum root to leaf numbers: " + sumRootToLeafNumbers(root));
 
+//        todo https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+//        int[] preorder = {1,2}, inorder = {2,1};
+//        bt.printBinaryTree(buildTree(preorder, inorder));
+
+//        todo https://leetcode.com/problems/flip-equivalent-binary-trees/description/
+//        areFlipEquivalent(root, root2);
+
+//        todo https://leetcode.com/problems/house-robber-iii/
+//        System.out.println("Maximum Money Robbery: " + maxMoneyRobbery(root));
+
+//        todo https://leetcode.com/problems/find-bottom-left-tree-value/
+//        System.out.println("Bottom Leftmost Value: " + findBottomLeftValue(root));
         
 
 
+
+    }
+
+    private static int findBottomLeftValue(TreeNode<Integer> root) {
+        return helperFindBottomLeftValue(root).val;
+    }
+
+    private static Bottom helperFindBottomLeftValue(TreeNode<Integer> root) {
+//        base case
+        if (root == null)
+            return new Bottom(-1, 0);
+        //leaf node
+        if (root.left == null && root.right == null)
+            return new Bottom(root.data, 1);
+
+        Bottom left = helperFindBottomLeftValue(root.left);
+        Bottom right = helperFindBottomLeftValue(root.right);
+
+        Bottom ans = left.height >= right.height ? left : right;
+        return new Bottom(ans.val, ans.height+1);
+    }
+
+    private static int maxMoneyRobbery(TreeNode<Integer> root) {
+        Rob money = helperRobbery(root);
+        return Math.max(money.withRoot, money.withoutRoot);
+    }
+
+    private static Rob helperRobbery(TreeNode<Integer> root) {
+//        base case
+        if (root == null)
+            return new Rob(0,0);
+        //leaf node
+        if (root.left == null && root.right == null)
+            return new Rob(root.data, 0);
+
+        Rob left = helperRobbery(root.left);
+        Rob right = helperRobbery(root.right);
+
+        int withRoot = root.data + left.withoutRoot + right.withoutRoot;
+        int withoutRoot = Math.max(left.withRoot, left.withoutRoot) +
+                Math.max(right.withRoot, right.withoutRoot);
+        return new Rob(withRoot, withoutRoot);
+    }
+
+    private static boolean areFlipEquivalent(TreeNode<Integer> root1, TreeNode<Integer> root2) {
+//        base case
+        if (root1 == null && root2 == null) return true;
+        if (root1 == null || root2 == null)
+            return false;
+        if (root1.data != root2.data)
+            return false;
+
+
+        if (areFlipEquivalent(root1.left, root2.left) && areFlipEquivalent(root1.right, root2.right))
+            return true;
+
+        return areFlipEquivalent(root1.left, root2.right) && areFlipEquivalent(root1.right, root2.left);
+    }
+
+    private static TreeNode<Integer> buildTree(int[] preorder, int[] inorder) {
+        return helperBuildTree(preorder, inorder, 0, inorder.length-1, 0, inorder.length-1);
+    }
+
+    private static TreeNode<Integer> helperBuildTree(int[] preorder, int[] inorder, int sp, int ep, int si, int ei) {
+//        base case
+        if (sp > ep)
+            return null;
+        if (si == ei)
+            return new TreeNode<>(inorder[si]);
+
+
+        //node at sp will always be root
+        int rootData = preorder[sp];
+        TreeNode<Integer> root = new TreeNode<>(rootData);
+
+        //find the index of root's data in inorder -> for LST and RST
+        int index = findIndex(inorder, rootData);
+
+        //call the function for building LST and RST
+        int lenOfLST = index-si;
+        root.left = helperBuildTree(preorder, inorder, sp+1, sp+lenOfLST, si, index-1);
+        root.right = helperBuildTree(preorder, inorder, sp+lenOfLST+1, ep, index+1, ei);
+        return root;
+    }
+
+    private static int findIndex(int[] inorder, int x) {
+        for (int i = 0; i < inorder.length; i++) {
+            if (inorder[i] == x)
+                return i;
+        }
+        return -1;
     }
 
     static int total = 0;
