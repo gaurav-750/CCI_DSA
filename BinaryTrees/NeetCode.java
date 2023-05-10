@@ -130,10 +130,76 @@ public class NeetCode {
 
 //        todo https://leetcode.com/problems/find-bottom-left-tree-value/
 //        System.out.println("Bottom Leftmost Value: " + findBottomLeftValue(root));
+
+//        todo https://leetcode.com/problems/trim-a-binary-search-tree/
+//        TreeNode<Integer> ans = trimBST(root, 1, 2);
+//        System.out.println("After trimming:");
+//        bt.printBinaryTree(ans);
+
+//        todo https://leetcode.com/problems/binary-search-tree-iterator/
+//        BSTIterator it = new BSTIterator(root);
+//        System.out.println(it.next()); //3
+//        System.out.println(it.next()); //7
+//        System.out.println(it.hasNext()); //true
+//        System.out.println(it.next()); //9
+//        System.out.println(it.hasNext()); //true
+//        System.out.println(it.next()); //15
+//        System.out.println(it.hasNext()); //true
+//        System.out.println(it.next()); //20
+//        System.out.println(it.hasNext()); //false
         
+//        todo https://leetcode.com/problems/convert-bst-to-greater-tree/
+        bt.printBinaryTree(convertBST(root));
 
 
+    }
 
+    private static TreeNode<Integer> convertBST(TreeNode<Integer> root) {
+        helperConvertBST(root, 0);
+        return root;
+    }
+
+    private static int helperConvertBST(TreeNode<Integer> root, int count) {
+//        base case
+        if (root == null)
+            return count;
+
+        int r = helperConvertBST(root.right, count);
+        System.out.println("r = " + r);
+
+        count = r + root.data;
+        root.data = count;
+
+        int l = helperConvertBST(root.left, count);
+
+        System.out.println("cnt: " + count);
+        return Math.max(count, l);
+    }
+
+    private static TreeNode<Integer> trimBST(TreeNode<Integer> root, int low, int high) {
+//        base case
+        if (root == null) return null;
+        //if the leaf node is not in range
+        if (root.left == null && root.right == null){
+            if (!isInRange(root.data, low, high))
+                return null;
+            else return root;
+        }
+
+        TreeNode<Integer> left = trimBST(root.left, low, high);
+        TreeNode<Integer> right = trimBST(root.right, low, high);
+
+        if (isInRange(root.data, low, high)){
+            root.left = left;
+            root.right = right;
+            return root;
+        }else { //matlab root range me nahi hai
+            return left != null ? left : right;
+        }
+    }
+
+    private static boolean isInRange(int data, int low, int high) {
+        return data >= low && data <= high;
     }
 
     private static int findBottomLeftValue(TreeNode<Integer> root) {
