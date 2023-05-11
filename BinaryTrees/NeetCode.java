@@ -155,25 +155,21 @@ public class NeetCode {
     }
 
     private static TreeNode<Integer> convertBST(TreeNode<Integer> root) {
-        helperConvertBST(root, 0);
+        helperConvertBST(root);
         return root;
     }
 
-    private static int helperConvertBST(TreeNode<Integer> root, int count) {
+    static int curSum = 0;
+    private static void helperConvertBST(TreeNode<Integer> root) {
 //        base case
         if (root == null)
-            return count;
+            return;
 
-        int r = helperConvertBST(root.right, count);
-        System.out.println("r = " + r);
+        helperConvertBST(root.right);
+        curSum += root.data;
+        root.data = curSum;
 
-        count = r + root.data;
-        root.data = count;
-
-        int l = helperConvertBST(root.left, count);
-
-        System.out.println("cnt: " + count);
-        return Math.max(count, l);
+        helperConvertBST(root.left);
     }
 
     private static TreeNode<Integer> trimBST(TreeNode<Integer> root, int low, int high) {
