@@ -21,6 +21,16 @@ class Task{
     }
 }
 
+class Trip{
+    int end;
+    int numPassengers;
+
+    public Trip(int end, int numPassengers) {
+        this.end = end;
+        this.numPassengers = numPassengers;
+    }
+}
+
 public class Neetcode {
     public static void main(String[] args) {
 
@@ -66,9 +76,44 @@ public class Neetcode {
 //        todo https://leetcode.com/problems/reorganize-string/
 //        reorganizeString("aaabc");
 
+//        todo https://leetcode.com/problems/car-pooling/description/
+        int[][] trips = {{1,2,3}, {2,1,5}, {3,3,7}};
+        System.out.println("Can drop all passengers: " + carPooling(trips, 5));
 
 
+    }
 
+    private static boolean carPooling(int[][] trips, int carCapacity) {
+        //trip = [passengers, from, to]
+        //sort the trips array wrt from(trip[1])
+        Arrays.sort(trips, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] t1, int[] t2) {
+                return t1[1] - t2[1];
+            }
+        });
+
+        //create a minHeap => (end, no.of passengers)
+        PriorityQueue<Trip> pq = new PriorityQueue<>((p1, p2) -> p1.end-p2.end);
+        int currentPassengers = 0;
+
+        for (int[] trip: trips){
+            int currentTripStart = trip[1];
+            int currentTripEnd = trip[2];
+
+            //agar koi trip ka end time ho gaya hai, to usko pop karlo and uske pass.remove krdo from currentPassengers
+            while (!pq.isEmpty() && pq.peek().end <= currentTripStart){
+                Trip rem = pq.poll();
+                currentPassengers -= rem.numPassengers;
+            }
+
+            currentPassengers += trip[0]; //add the passengers to currentPassengers in the car
+            if (currentPassengers > carCapacity)
+                return false;
+            pq.add(new Trip(currentTripEnd, trip[0]));
+        }
+
+        return true;
     }
 
     private static String reorganizeString(String s) {
