@@ -48,9 +48,86 @@ public class Neetcode {
 //        int[][] tasks = {{100,100},{1000000000,1000000000}};
 //        getOrderOfTasks(tasks);
 
-        
+//        todo https://leetcode.com/problems/seat-reservation-manager/
+//        SeatManager sm = new SeatManager(5);
+//        System.out.println(sm.reserve());
+//        System.out.println(sm.reserve());
+//        sm.unreserve(2);
+//        System.out.println(sm.reserve());
+//        System.out.println(sm.reserve());
+//        System.out.println(sm.reserve());
+//        System.out.println(sm.reserve());
+//        sm.unreserve(5);
+
+//        todo https://leetcode.com/problems/find-the-kth-largest-integer-in-the-array/
+//        String[] nums = {"3","6","7","10"};
+//        System.out.println("Kth Largest Element: " + kthLargestNumber(nums, 3));
+
+//        todo https://leetcode.com/problems/reorganize-string/
+//        reorganizeString("aaabc");
 
 
+
+
+    }
+
+    private static String reorganizeString(String s) {
+        if (s.length() == 0) return "";
+        //build a map
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        //Max Priority Queue - to get the char with maximum frequency
+        PriorityQueue<Map.Entry<Character, Integer>> pq = new PriorityQueue<>((a, b) ->
+            b.getValue() - a.getValue()
+        );
+        pq.addAll(map.entrySet()); //add map to pq
+
+        StringBuilder res = new StringBuilder();
+        while (!pq.isEmpty()){
+            Map.Entry<Character, Integer> temp1 = pq.poll();
+            //if the last char is not the same as this one
+            if (res.isEmpty() || res.charAt(res.length()-1) != temp1.getKey()){
+                res.append(temp1.getKey());
+                temp1.setValue(temp1.getValue()-1); //decrement the freq.of the char by 1
+            }else { // prev character is same
+                Map.Entry<Character, Integer> temp2 = pq.poll();
+                if (temp2 == null) //that means temp1 was the only char in heap and there's no way to avoid adjacent temp1. So no answer is possible
+                    return "";
+
+                //add this character
+                res.append(temp2.getKey());
+                temp2.setValue(temp2.getValue()-1);
+
+                if (temp2.getValue() != 0)
+                    pq.add(temp2);
+            }
+
+            if (temp1.getValue() != 0)
+                pq.add(temp1); //add temp1 back to PQ
+        }
+        return res.toString();
+    }
+
+    private static String kthLargestNumber(String[] nums, int k) {
+        //Max Heap
+        PriorityQueue<Long> pq = new PriorityQueue<>((a, b) -> Long.compare(b,a));
+
+        for (String num: nums){
+            long n = Long.parseLong(num);
+            pq.add(n);
+        }
+
+        //return the kth largest
+        long ans = 0;
+        while (k != 0){
+            ans = pq.poll();
+            k--;
+        }
+        return Long.toString(ans);
     }
 
     private static int[] getOrderOfTasks(int[][] tasks) {
