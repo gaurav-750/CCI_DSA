@@ -11,6 +11,16 @@ class Dist {
     }
 }
 
+class Task{
+    int proc_time;
+    int index;
+
+    public Task(int proc_time, int index) {
+        this.proc_time = proc_time;
+        this.index = index;
+    }
+}
+
 public class Neetcode {
     public static void main(String[] args) {
 
@@ -24,9 +34,89 @@ public class Neetcode {
 //                Arrays.deepToString(kClosestToTheOrigin(points, 1)));
 //        System.out.println("Kth closest element to (0,0): " +
 //                Arrays.deepToString(kClosestToTheOrigin2(points, 1)));
+
+//        todo https://leetcode.com/problems/kth-largest-element-in-an-array/
+//        int[] arr = {3,2,3,1,2,4,5,5,6};
+//        System.out.println("Kth largest element in the array: " +
+//                kthLargestElementinArray(arr, 4));
+
+//        todo https://leetcode.com/problems/single-threaded-cpu/
+//        int[][] tasks = {{1,2},{3,2},{2,4},{4,1}};
+//        int[][] tasks = {{7,10},{7,12},{7,5},{7,4},{7,2}};
+//        int[][] tasks = {{5,2},{7,2},{9,4},{6,3},{5,10},{1,1}};
+//        int[][] tasks = {{19,13},{16,9},{21,10},{32,25},{37,4},{49,24},{2,15},{38,41},{37,34},{33,6},{45,4},{18,18},{46,39},{12,24}};
+//        int[][] tasks = {{100,100},{1000000000,1000000000}};
+//        getOrderOfTasks(tasks);
+
         
 
 
+    }
+
+    private static int[] getOrderOfTasks(int[][] tasks) {
+        //preserve the original index
+        for (int i = 0; i < tasks.length; i++) {
+            int[] arr = new int[3];
+            arr[0] = tasks[i][0];
+            arr[1] = tasks[i][1];
+            arr[2] = i;
+            tasks[i] = arr;
+        }
+
+        //sort
+        Arrays.sort(tasks, (a,b) -> Integer.compare(a[0], b[0]));
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] t1, int[] t2) {
+                if (t1[1] == t2[1])
+                    return t1[2] - t2[2];
+                return t1[1] - t2[1];
+            }
+        }
+        );
+        int t = tasks[0][0], i = 0, k = 0;
+        int[] res = new int[tasks.length];
+        while (i < tasks.length){
+
+            //add task to pq if task[0] <= t
+            while (i < tasks.length && tasks[i][0] <= t){
+                pq.add(tasks[i]);
+                i++;
+            }
+
+            //add to the result
+            if (!pq.isEmpty()) {
+                int[] completed_Task = pq.poll();
+                t += completed_Task[1];
+                res[k] = completed_Task[2];
+                k++;
+            }else {
+                t = tasks[i][0];
+            }
+        }
+
+        //for remaining tasks in the heap
+        while (!pq.isEmpty()){
+            res[k] = pq.poll()[2];
+            k++;
+        }
+        return res;
+    }
+
+    //return the kth largest element from the array
+    private static int kthLargestElementinArray(int[] arr, int k) {
+        //max Heap
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b-a);
+        for (int elem: arr)
+            pq.add(elem);
+
+        int cur = arr[0];
+        while (k != 0 && !pq.isEmpty()) {
+            cur = pq.poll();
+            k--;
+        }
+        return cur;
     }
 
     private static int[][] kClosestToTheOrigin2(int[][] points, int k) {
