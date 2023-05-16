@@ -33,15 +33,58 @@ public class Neetcode {
 //        System.out.println("Permutations 2: " + permutations2(arr));
 
 //        todo https://leetcode.com/problems/word-search/
-        char[][] board = {{'C', 'A', 'A'},
-                          {'A', 'A', 'A'},
-                          {'B', 'C', 'D'}};
-        String word = "AAB";
-        System.out.println("Found: " + wordSearch(board, word));
+//        char[][] board = {{'C', 'A', 'A'},
+//                          {'A', 'A', 'A'},
+//                          {'B', 'C', 'D'}};
+//        String word = "AAB";
+//        System.out.println("Found: " + wordSearch(board, word));
+
+//        todo https://leetcode.com/problems/palindrome-partitioning/
+//        System.out.println("Partitions: " + palindromePartition("aab"));
+
+//        todo https://leetcode.com/problems/restore-ip-addresses/
+        restoreIpAddresses("25525511135");
+        
 
 
 
+    }
 
+//    private static void restoreIpAddresses(String s) {
+//    }
+
+    private static List<List<String>> palindromePartition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        partitionHelper(s, new ArrayList<String>(), list);
+        return list;
+    }
+
+    private static void partitionHelper(String s, ArrayList<String> temp, List<List<String>> list) {
+        if (s.equals("")){
+            list.add(new ArrayList<>(temp));
+            return;
+        }
+
+        for (int i = 0; i < s.length(); i++) {
+            String subStr = s.substring(0, i+1);
+            if (!isPalindrome(subStr))
+                continue;
+
+            temp.add(subStr);
+            partitionHelper(s.substring(i+1), temp, list);
+
+            temp.remove(temp.size()-1);
+        }
+    }
+
+    private static boolean isPalindrome(String s) {
+        int i = 0, j = s.length()-1;
+        while (i < j){
+            if (s.charAt(i) != s.charAt(j))
+                return false;
+            i++; j--;
+        }
+        return true;
     }
 
     private static boolean wordSearch(char[][] board, String word) {
