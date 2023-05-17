@@ -43,11 +43,90 @@ public class Neetcode {
 //        System.out.println("Partitions: " + palindromePartition("aab"));
 
 //        todo https://leetcode.com/problems/restore-ip-addresses/
-        restoreIpAddresses("25525511135");
-        
+//        restoreIpAddresses("25525511135");
+
+//        todo https://leetcode.com/problems/matchsticks-to-square/
+//        int[] matchSticks = {1,1,2,2,2};
+//        System.out.println("Can make square: " + makeSquare(matchSticks));
+
+        System.out.println(Integer.parseInt("00004"));
+//        todo https://leetcode.com/problems/splitting-a-string-into-descending-consecutive-values/
+        System.out.println("Can Split: " + splitString("0500403"));
 
 
 
+    }
+
+    private static boolean splitString(String s) {
+        if (Integer.parseInt(s) < 10)
+            return false;
+
+        return splitHelper(0, "", s);
+    }
+
+    private static boolean splitHelper(int curInd, String prev, String s) {
+        System.out.println(curInd + ", " + prev);
+//        base case
+        if (curInd == s.length())
+            return true;
+
+
+        for (int i = curInd; i < s.length(); i++) {
+            String subStr = s.substring(curInd, i+1);
+            System.out.println("subStr = " + subStr + " " + (curInd + "," + (i+1)));
+            if (subStr == (s))
+                return false;
+            if (!prev.equals("") && Integer.parseInt(prev) - Integer.parseInt(subStr) != 1) {
+                System.out.println("diff is not 1..");
+                return false;
+            }
+
+            boolean ans = splitHelper(i+1, subStr, s);
+            if (ans) return true;
+        }
+
+        return false;
+    }
+
+    private static boolean makeSquare(int[] matchSticks) {
+        int sum = 0;
+        for (int elem: matchSticks)
+            sum += elem;
+
+        int length = sum/4;
+        if (sum % 4 != 0) //cannot be a square
+            return false;
+
+        reverseArr(matchSticks);
+        int[] sides = new int[4];
+        return makeSquareHelper(0, length, sides, matchSticks);
+    }
+
+    private static void reverseArr(int[] matchSticks) {
+        int i = 0, j = matchSticks.length-1;
+        while (i < j){
+            int temp = matchSticks[i];
+            matchSticks[i] = matchSticks[j];
+            matchSticks[j] = temp;
+            i++;j--;
+        }
+    }
+
+    private static boolean makeSquareHelper(int i, int length, int[] sides, int[] matchSticks) {
+        if (i == matchSticks.length)
+            return true;
+
+        for (int j = 0; j < 4; j++) {
+            if (sides[j] + matchSticks[i] <= length){
+                sides[j] += matchSticks[i];
+
+                boolean canMakeSquare = makeSquareHelper(i+1, length, sides, matchSticks);
+                if (canMakeSquare)
+                    return true;
+                sides[j] = sides[j] - matchSticks[i];
+            }
+        }
+        return false;
     }
 
 //    private static void restoreIpAddresses(String s) {
