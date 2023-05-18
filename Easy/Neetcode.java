@@ -6,6 +6,7 @@ import LinkedList.Linked_List;
 import LinkedList.Node;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Neetcode {
     public static void main(String[] args) {
@@ -34,7 +35,7 @@ public class Neetcode {
 //        isLinkedListPalindrome(head);
 
 //        todo https://leetcode.com/problems/invert-binary-tree/
-//        BinaryTree bt = new BinaryTree();
+        BinaryTree bt = new BinaryTree();
 //        TreeNode<Integer> root = bt.takeInput();
 //        bt.printBinaryTree(invertBinaryTree(root));
 
@@ -42,9 +43,80 @@ public class Neetcode {
 //        int[] arr = {17,18,5,4,6,1};
 //        System.out.println("Replace Elements: " + Arrays.toString(replaceElements(arr)));
 
+//        todo https://leetcode.com/problems/merge-two-binary-trees/
+//        TreeNode<Integer> root1 = bt.takeInput();
+//        TreeNode<Integer> root2 = bt.takeInput();
+//        bt.printBinaryTree(mergeTwoBinaryTrees(root1, root2));
+
+//        todo https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+//        TreeNode<Integer> root = bt.takeInput();
+//        lcaOfBST(root, new TreeNode<>(2), new TreeNode<>(6));
+
+//        todo https://leetcode.com/problems/happy-number/description/
+        isHappyNumber(19);
 
 
 
+
+    }
+
+    private static boolean isHappyNumber(int n) {
+        HashSet<Integer> set = new HashSet<>();
+        while (!set.contains(n)){
+            set.add(n);
+            System.out.println(set);
+
+            n = sumOfSquares(n);
+            if (n == 1)
+                return true;
+        }
+        return false;
+    }
+
+    private static int sumOfSquares(int n) {
+        int sum = 0;
+        while (n != 0){
+            int rem = n%10;
+            sum += (rem*rem);
+            n /= 10;
+        }
+        return sum;
+    }
+
+    private static TreeNode<Integer> lcaOfBST(TreeNode<Integer> root, TreeNode<Integer> p, TreeNode<Integer> q) {
+        //base case
+        if (root.data == p.data || root.data == q.data)
+            return root;
+
+        if (p.data < root.data && q.data < root.data){
+            return lcaOfBST(root.left, p, q);
+        }else if (p.data > root.data && q.data > root.data)
+            return lcaOfBST(root.right, p, q);
+        else
+            return root;
+    }
+
+    private static TreeNode<Integer> mergeTwoBinaryTrees(TreeNode<Integer> root1, TreeNode<Integer> root2) {
+//        base case
+        if (root1 == null && root2 == null)
+            return null;
+
+
+        TreeNode<Integer> root;
+        if (root1 != null && root2 != null){
+            root = new TreeNode<>(root1.data + root2.data);
+            root.left = mergeTwoBinaryTrees(root1.left, root2.left);
+            root.right = mergeTwoBinaryTrees(root1.right, root2.right);
+        }else if (root1 != null){
+            root = new TreeNode<>(root1.data);
+            root.left = mergeTwoBinaryTrees(root1.left, null);
+            root.right = mergeTwoBinaryTrees(root1.right, null);
+        }else { //root1 == null && root2 != null
+            root = new TreeNode<>(root2.data);
+            root.left = mergeTwoBinaryTrees(null, root2.left);
+            root.right = mergeTwoBinaryTrees(null, root2.right);
+        }
+        return root;
     }
 
     private static int[] replaceElements(int[] arr) {
