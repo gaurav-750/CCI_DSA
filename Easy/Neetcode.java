@@ -1,5 +1,10 @@
 package Easy;
 
+import BinaryTrees.BinaryTree;
+import BinaryTrees.TreeNode;
+import LinkedList.Linked_List;
+import LinkedList.Node;
+
 import java.util.Arrays;
 
 public class Neetcode {
@@ -18,11 +23,126 @@ public class Neetcode {
 //        System.out.println("Maximum possible robbery: " + houseRobber(houses));
 
 //        todo https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
-        int[] prices = {7,1,5,3,6,4};
-        System.out.println("Max Profit: " + maxProfit(prices));
+//        int[] prices = {7,1,5,3,6,4};
+//        System.out.println("Max Profit: " + maxProfit(prices));
+
+//        todo https://leetcode.com/problems/climbing-stairs/
+//        System.out.println("Number of ways to climb the stairs: " + climbingStairs(5));
+
+//        todo https://leetcode.com/problems/palindrome-linked-list/
+//        Node<Integer> head = linkedListInput();
+//        isLinkedListPalindrome(head);
+
+//        todo https://leetcode.com/problems/invert-binary-tree/
+//        BinaryTree bt = new BinaryTree();
+//        TreeNode<Integer> root = bt.takeInput();
+//        bt.printBinaryTree(invertBinaryTree(root));
+
+//        todo https://leetcode.com/problems/replace-elements-with-greatest-element-on-right-side/
+//        int[] arr = {17,18,5,4,6,1};
+//        System.out.println("Replace Elements: " + Arrays.toString(replaceElements(arr)));
 
 
 
+
+    }
+
+    private static int[] replaceElements(int[] arr) {
+        int maxTillNow = -1;
+
+        for (int i = arr.length-1; i >= 0; i--) {
+            int temp = arr[i];
+            arr[i] = maxTillNow;
+            maxTillNow = Math.max(maxTillNow, temp);
+        }
+        return arr;
+    }
+
+    private static Node<Integer> linkedListInput() {
+        Linked_List ll = new Linked_List();
+        Node<Integer> head = ll.takeInput();
+        ll.printLL(head);
+        return head;
+    }
+
+    private static TreeNode<Integer> invertBinaryTree(TreeNode<Integer> root) {
+//        base case
+        if (root == null)
+            return null;
+
+
+        TreeNode<Integer> left = invertBinaryTree(root.left);
+        TreeNode<Integer> right = invertBinaryTree(root.right);
+
+        root.left = right;
+        root.right = left;
+        return root;
+    }
+
+    private static boolean isLinkedListPalindrome(Node<Integer> head) {
+        if (head == null || head.data == null)
+            return true;
+
+        //find the mid of the Linked List and reverse it
+        Node<Integer> slow = head, fast = head;
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if (fast != null) //for odd length LL
+            slow = slow.next;
+
+        Node<Integer> head2 = reverseLinkedList(slow);
+        while (head2 != null){
+            if (head.data != head2.data)
+                return false;
+
+            head = head.next;
+            head2 = head2.next;
+        }
+        return true;
+    }
+
+    private static Node<Integer> reverseLinkedList(Node<Integer> head) {
+        if (head == null || head.next == null)
+            return head;
+        Node<Integer> past = null,
+                    present = head,
+                    future = head.next;
+
+        while (present != null){
+            present.next = past;
+            past = present;
+            present = future;
+
+            if (future != null)
+                future = future.next;
+        }
+        return past;
+    }
+
+    private static int stairsHelper(int n, int[] arr) {
+//        base case
+        if (n == 1 || n == 2)
+            return n;
+        if (arr[n] != -1)
+            return arr[n];
+
+
+        //take 1 step
+        int step1 = stairsHelper(n-1, arr);
+        //take 2 step
+        int step2 = stairsHelper(n-2, arr);
+
+        arr[n] = step1 + step2;
+        return arr[n];
+    }
+
+    private static int climbingStairs(int n) {
+        int[] arr = new int[n+1];
+        Arrays.fill(arr, -1);
+
+        return stairsHelper(n, arr);
     }
 
     private static int maxProfit(int[] prices) {
