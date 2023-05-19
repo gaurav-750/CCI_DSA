@@ -5,8 +5,7 @@ import BinaryTrees.TreeNode;
 import LinkedList.Linked_List;
 import LinkedList.Node;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 
 public class Neetcode {
     public static void main(String[] args) {
@@ -53,11 +52,100 @@ public class Neetcode {
 //        lcaOfBST(root, new TreeNode<>(2), new TreeNode<>(6));
 
 //        todo https://leetcode.com/problems/happy-number/description/
-        isHappyNumber(19);
+//        isHappyNumber(19);
+
+//        todo https://leetcode.com/problems/search-insert-position/
+//        int[] arr = {1,3,5,6};
+//        System.out.println("Insert Position: " + insertPosition(arr, 7));
+
+//        todo https://leetcode.com/problems/last-stone-weight/
+//        int[] stones =  {2,7,4,1,8,1};
+//        System.out.println("Last stone weight: " + lastStoneWeight(stones));
+
+//        todo https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+//        int[] nums = {0,0,1,1,1,2,2,3,3,4};
+//        System.out.println(removeDuplicates(nums));
+
+//        todo https://leetcode.com/problems/ugly-number/
+//        System.out.println("Is Ugly Number: " + isUglyNumber(6));
+
+//        todo https://leetcode.com/problems/length-of-last-word/
+//        String str =  "   fly me   to   the moon  ";
+//        System.out.println("Length of last word: " + lengthOfLastWord(str));
 
 
 
 
+    }
+
+    private static int lengthOfLastWord(String str) {
+        str = str.trim();
+        System.out.println("str = " + str);
+
+        String[] words = str.split("\\s+");
+        System.out.println(Arrays.toString(words));
+        return words[words.length-1].length();
+    }
+
+    private static boolean isUglyNumber(int n) {
+        if (n <= 0)
+            return false;
+        List<Integer> list = Arrays.asList(2,3,5);
+
+        for (int primeFactor : list){
+            while (n % primeFactor == 0)
+                n = n/primeFactor;
+        }
+        return n == 1;
+    }
+
+    private static int removeDuplicates(int[] nums) {
+        int l = 0, r = 0;
+
+        while (r < nums.length){
+            while (r < nums.length-1 && nums[r] == nums[r+1])
+                r++;
+
+            nums[l] = nums[r];
+            l++;
+            r++;
+        }
+        return l;
+    }
+
+    private static int lastStoneWeight(int[] stones) {
+        //Max Heap
+        PriorityQueue<Integer> pq = new PriorityQueue<>(
+                (a,b) -> b-a
+        );
+        for (int stone: stones)
+            pq.add(stone);
+
+        while (!pq.isEmpty() && pq.size() != 1){
+            int y = pq.poll();
+            int x = pq.poll();
+
+            if (y != x)
+                pq.add(y-x);
+        }
+
+        return pq.isEmpty() ? 0 : pq.peek();
+    }
+
+    private static int insertPosition(int[] arr, int x) {
+        int l = 0, r = arr.length-1;
+
+        while (l <= r){
+            int mid = (l+r)/2;
+
+            if (arr[mid] == x)
+                return mid;
+            else if (arr[mid] > x)
+                r = mid-1;
+            else
+                l = mid+1;
+        }
+        return l;
     }
 
     private static boolean isHappyNumber(int n) {
