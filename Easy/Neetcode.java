@@ -73,9 +73,108 @@ public class Neetcode {
 //        String str =  "   fly me   to   the moon  ";
 //        System.out.println("Length of last word: " + lengthOfLastWord(str));
 
+//        todo https://leetcode.com/problems/min-cost-climbing-stairs/
+//        int[] cost = {1,100,1,1,1,100,1,1,100,1};
+//        System.out.println("Min Cost Climbing stairs: " + minCostClimbingStairs(cost));
+
+//        todo https://leetcode.com/problems/valid-palindrome/
+//        String str = "A man, a plan, a canal: Panama";
+//        System.out.println("Is Valid Palindrome: " + validPalindrome(str));
+//        System.out.println("Is Valid Palindrome: " + isValidPalindrome(str));
+
+//        todo https://leetcode.com/problems/kth-largest-element-in-a-stream/
+//        KthLargest obj = new KthLargest(3, new int[]{4,5,8,2});
+//        System.out.println(obj.add(3));
+//        System.out.println(obj.add(5));
+//        System.out.println(obj.add(10));
+//        System.out.println(obj.add(9));
+//        System.out.println(obj.add(4));
+
+//        todo https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/
+        System.out.println("First Occurrence: " + firstOccurrence("mississipi", "issip"));
 
 
 
+
+
+    }
+
+    private static int firstOccurrence(String str, String s) {
+        if (s.equals(""))
+            return 0;
+        int i = 0, j = 0;
+
+        while (i < str.length()){
+            int k = i;
+            while (str.charAt(k) == s.charAt(j)){
+                k++;
+                j++;
+
+                if (j == s.length())
+                    return i;
+            }
+
+            j = 0;
+            i++;
+        }
+        return -1;
+    }
+
+    private static boolean isValidPalindrome(String str) {
+        int l = 0, r = str.length()-1;
+
+        while (l < r){
+            while (l < r && !isAlphaNumericCharacter(str.charAt(l)))
+                l++;
+            while (r > l && !isAlphaNumericCharacter(str.charAt(r)))
+                r--;
+
+            if (Character.toLowerCase(str.charAt(l)) !=
+                Character.toLowerCase(str.charAt(r)))
+                return false;
+            l++;r--;
+        }
+        return true;
+    }
+
+    private static boolean isAlphaNumericCharacter(char c){
+        return  'A' <=  c && c <= 'Z' ||
+                'a' <=  c && c <= 'z' ||
+                '0' <=  c && c <= '9';
+    }
+
+    private static boolean validPalindrome(String str) {
+        //we only want alphanumeric characters
+        str = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+
+        int l = 0, r = str.length()-1;
+        while (l < r){
+            if (str.charAt(l) != str.charAt(r))
+                return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    private static int minCostClimbingStairs(int[] cost) {
+        int[] dp = new int[cost.length];
+        Arrays.fill(dp, -1);
+        return Math.min(minCostStairs(0, cost, dp), minCostStairs(1, cost, dp));
+    }
+
+    private static int minCostStairs(int i, int[] cost, int[] dp) {
+//        base case
+        if (i >= cost.length)
+            return 0;
+
+//        if the result is already cal, just return it
+        if (dp[i] != -1)
+            return dp[i];
+
+        int min = Math.min(minCostStairs(i+1, cost, dp) , minCostStairs(i+2, cost, dp));
+        dp[i] = cost[i] + min;
+        return dp[i];
     }
 
     private static int lengthOfLastWord(String str) {
