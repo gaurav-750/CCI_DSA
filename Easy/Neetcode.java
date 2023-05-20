@@ -119,8 +119,62 @@ public class Neetcode {
 //        Node<Integer> head2 = ll.takeInput();
 //        getIntersectionNode(head1, head2);
 
+//        todo https://leetcode.com/problems/next-greater-element-i/
+//        int[] nums1 = {4,1,2}, nums2 = {1,3,4,2};
+//        nextGreaterElement(nums1, nums2);
+
+//        todo https://leetcode.com/problems/valid-palindrome-ii/
+        String s = "adcbfgfbca";
+        validPalindrome2(s);
 
 
+
+
+    }
+
+    private static boolean validPalindrome2(String s) {
+        int l = 0, r = s.length()-1;
+        while (l < r){
+            if (s.charAt(l) != s.charAt(r)){
+                return checkIfPalindrome(s, l+1, r) ||
+                        checkIfPalindrome(s, l, r-1);
+            }
+
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    private static boolean checkIfPalindrome(String s, int i, int j) {
+        while (i < j){
+            if (s.charAt(i) != s.charAt(j))
+                return false;
+            i++; j--;
+        }
+        return true;
+    }
+
+    private static int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums1.length; i++)
+            map.put(nums1[i], i);
+
+        Arrays.fill(nums1, -1);
+        Stack<Integer> stack = new Stack<>();
+        for (int cur : nums2){
+            while (!stack.isEmpty() && cur > stack.peek()){
+                int top = stack.pop();
+
+                //get its index and place cur there
+                int index = map.get(top);
+                nums1[index] = cur;
+            }
+
+            if (map.containsKey(cur))
+                stack.push(cur);
+        }
+        return nums1;
     }
 
     private static Node<Integer> getIntersectionNode(Node<Integer> head1, Node<Integer> head2) {
