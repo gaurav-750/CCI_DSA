@@ -91,12 +91,129 @@ public class Neetcode {
 //        System.out.println(obj.add(4));
 
 //        todo https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/
-        System.out.println("First Occurrence: " + firstOccurrence("mississipi", "issip"));
+//        System.out.println("First Occurrence: " + firstOccurrence("mississipi", "issip"));
+
+//        todo https://leetcode.com/problems/majority-element/
+//        int[] arr = {2,2,1,1,1,2,2};
+//        majorityElement(arr);
+
+//        todo https://leetcode.com/problems/squares-of-a-sorted-array/
+//        int[] nums = {-4,-1,0,3,10};
+//        System.out.println("Sorted Squares Array: " + Arrays.toString(sortedSquares(nums)));
+
+//        todo https://leetcode.com/problems/path-sum/
+//        TreeNode<Integer> root = bt.takeInput();
+//        System.out.println("Has Path Sum: " + pathSum(root, 22));
+
+//        todo https://leetcode.com/problems/find-pivot-index/
+//        int[] arr = {1,7,3,6,5,6};
+//        System.out.println("Pivot index: " + findPivot(arr));
+
+//        todo https://leetcode.com/problems/single-number/description/
+//        int[] nums = {4,1,2,1,2};
+//        System.out.println("Single number 🥲: " + singleNumber(nums));
+
+//        todo https://leetcode.com/problems/intersection-of-two-linked-lists/
+//        Linked_List ll = new Linked_List();
+//        Node<Integer> head1 = ll.takeInput();
+//        Node<Integer> head2 = ll.takeInput();
+//        getIntersectionNode(head1, head2);
 
 
 
+    }
 
+    private static Node<Integer> getIntersectionNode(Node<Integer> head1, Node<Integer> head2) {
+        Node<Integer> h1 = head1, h2 = head2;
 
+        while (h1 != h2){
+            h1 = h1 != null ? h1.next : head2;
+            h2 = h2 != null ? h2.next : head1;
+        }
+
+        return h1;
+    }
+
+    private static int singleNumber(int[] nums) {
+        // XOR operation:
+        //1^1 = 0, 0^0 = 0, but 1^0 -> 1. That means, n^n = 0, and n^0 = n
+
+        int res = 0;
+        for (int num: nums){
+            res = res ^ num;
+        }
+        return res;
+    }
+
+    private static int findPivot(int[] arr) {
+        int totalSum = 0;
+        for (int elem: arr) totalSum += elem;
+
+        int ls = 0, rs = totalSum;
+        for (int i = 0; i < arr.length; i++) {
+            rs -= arr[i];
+
+            if (ls == rs) //pivot found
+                return i;
+
+            ls += arr[i];
+        }
+        return -1;
+    }
+
+    private static boolean pathSum(TreeNode<Integer> root, int target) {
+        return pathSumHelper(0, root, target);
+    }
+
+    private static boolean pathSumHelper(int curSum, TreeNode<Integer> root, int target) {
+//        base case
+        if (root == null)
+            return false;
+        //leaf node
+        if (root.left == null && root.right == null)
+            return curSum + root.data == target;
+
+        boolean left = pathSumHelper(curSum+root.data, root.left, target);
+        if (left)
+            return true;
+
+        return pathSumHelper(curSum+root.data, root.right, target);
+    }
+
+    private static int[] sortedSquares(int[] nums) {
+        int[] res = new int[nums.length];
+        int l = 0, r = nums.length-1, i = nums.length-1;
+
+        //we'll create the res array from right to left
+        while (l < r){
+            if (Math.abs(nums[l]) < Math.abs(nums[r])) {
+                res[i] = nums[r] * nums[r];
+                r--;
+            }else {
+                res[i] = nums[l] * nums[l];
+                l++;
+            }
+
+            i--;
+        }
+        return res;
+    }
+
+    private static int majorityElement(int[] arr) {
+        // This is a O(n) solution with no extra space, i.e O(1)
+        // Boyer Moore majority voting algorithm
+        int count = 0, num = 0;
+
+        for (int curElem : arr){
+            if (count == 0)
+                num = curElem;
+
+            if (curElem == num)
+                count++;
+            else
+                count--;
+        }
+        return num;
     }
 
     private static int firstOccurrence(String str, String s) {
