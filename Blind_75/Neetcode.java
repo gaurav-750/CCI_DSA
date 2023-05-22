@@ -1,6 +1,21 @@
 package Blind_75;
 
-import java.util.Arrays;
+import BinaryTrees.BinaryTree;
+import BinaryTrees.TreeNode;
+
+import java.util.*;
+
+class BSTReturn{
+    boolean isBST;
+    int min;
+    int max;
+
+    public BSTReturn(boolean isBST, int min, int max) {
+        this.isBST = isBST;
+        this.min = min;
+        this.max = max;
+    }
+}
 
 public class Neetcode {
     public static void main(String[] args) {
@@ -26,11 +41,118 @@ public class Neetcode {
 //        int[] coins = {186,419,83,408};
 //        System.out.println("Minimum number of coins: " + coinChange(coins, 7));
         //Using Dynamic Programming:
-        System.out.println("Minimum Coins: " + coinChangeDP(coins, 3));
+//        System.out.println("Minimum Coins: " + coinChangeDP(coins, 3));
+
+//        todo https://leetcode.com/problems/top-k-frequent-elements/
+//        int[] nums = {1,1,1,2,2,3};
+//        System.out.println(Arrays.toString(topKFrequent(nums, 2)));
+
+//        todo https://leetcode.com/problems/longest-consecutive-sequence/
+//        int[] nums = {100,4,200,1,3,2};
+//        System.out.println("Longest Consecutive Sequence: " +
+//                longestConsecutiveSequence(nums));
+
+//        todo https://leetcode.com/problems/longest-substring-without-repeating-characters/
+//        String s = "qrsvbspk";
+//        System.out.println("Length of longest substring: " + lengthOfLongestSubString(s));
+
+//        todo https://leetcode.com/problems/validate-binary-search-tree/
+        BinaryTree bt = new BinaryTree();
+        TreeNode<Integer> root = bt.takeInput();
+        System.out.println("Is BST: " + validateBST(root));
 
 
 
 
+
+    }
+
+    private static boolean validateBST(TreeNode<Integer> root) {
+        return validateBstHelper(root).isBST;
+    }
+
+    private static BSTReturn validateBstHelper(TreeNode<Integer> root) {
+//        base
+        if (root == null)
+            return new BSTReturn(true, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        //leaf node
+        if (root.left == null && root.right == null)
+            return new BSTReturn(true, root.data, root.data);
+
+
+        BSTReturn left = validateBstHelper(root.left);
+        BSTReturn right = validateBstHelper(root.right);
+
+        boolean isBst = true;
+        if (root.data <= left.max || right.min < root.data){
+            isBst = false;
+        }
+        if (!left.isBST || !right.isBST)
+            isBst = false;
+
+        int min = Math.min(Math.min(left.min, right.min), root.data);
+        int max = Math.max(Math.max(left.max, right.max), root.data);
+
+        return new BSTReturn(isBst, min, max);
+    }
+
+    private static int lengthOfLongestSubString(String s) {
+        HashSet<Character> set = new HashSet<>();
+
+        int l = 0, r = 0, maxLength = 0;
+        while (r < s.length()){
+            char c = s.charAt(r);
+            while (set.contains(c)){
+                set.remove(s.charAt(l));
+                l++;
+            }
+
+            set.add(c);
+            System.out.println("set = " + set);
+            maxLength = Math.max(maxLength, set.size());
+            r++;
+        }
+        return maxLength;
+    }
+
+    private static int longestConsecutiveSequence(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int num: nums)
+            set.add(num);
+
+        int max = 0;
+        for (int num: nums){
+            int cur = 0;
+
+            if (!set.contains(num-1)){
+                while (set.contains(num)){
+                    cur++;
+                    num += 1;
+                }
+
+                max = Math.max(max, cur);
+            }
+        }
+        return max;
+    }
+
+    private static int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int elem: nums)
+            map.put(elem, map.getOrDefault(elem, 0) + 1);
+
+        //MaxHeap
+        PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>(
+                (a,b) -> b.getValue() - a.getValue());
+        maxHeap.addAll(map.entrySet());
+
+        //pop k elements
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            int val = maxHeap.poll().getKey();
+            res[i] = val;
+        }
+        return res;
     }
 
     private static int coinChangeDP(int[] coins, int amount) {
