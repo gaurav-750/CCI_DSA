@@ -11,10 +11,32 @@ public class Striver_Playlist {
 //        todo https://www.codingninjas.com/codestudio/problems/frog-jump_3621012
         int[] heights = {10,20,30,10};
 //        System.out.println("Minimum energy lost: " + frogJump(heights));
-        System.out.println("Minimum energy: " + frogJumpTabulation(heights));
+//        System.out.println("Minimum energy: " + frogJumpTabulation(heights));
+
+//        todo https://www.codingninjas.com/codestudio/problems/maximum-sum-of-non-adjacent-elements_843261
+        int[] arr = {2, 1, 4, 9};
+        System.out.println("Max Sum of non adjacent elements: " +
+                                        maxSumNonAdjacent(arr));
 
 
+    }
 
+    private static int maxSumNonAdjacent(int[] arr) {
+        return maxSumHelper(0, arr);
+    }
+
+    private static int maxSumHelper(int i, int[] arr) {
+//        base case
+        if (i >= arr.length)
+            return 0;
+        if (i == arr.length-1)
+            return arr[i];
+
+
+        int pick = arr[i] + maxSumHelper(i+2, arr);
+        int notPick = maxSumHelper(i+1, arr);
+
+        return Math.max(pick, notPick);
     }
 
     private static int frogJumpTabulation(int[] heights) {
