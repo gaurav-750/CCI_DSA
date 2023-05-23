@@ -77,8 +77,17 @@ public class Neetcode {
 //        reorganizeString("aaabc");
 
 //        todo https://leetcode.com/problems/car-pooling/description/
-        int[][] trips = {{1,2,3}, {2,1,5}, {3,3,7}};
-        System.out.println("Can drop all passengers: " + carPooling(trips, 5));
+//        int[][] trips = {{1,2,3}, {2,1,5}, {3,3,7}};
+//        System.out.println("Can drop all passengers: " + carPooling(trips, 5));
+
+//        todo https://leetcode.com/problems/kth-largest-element-in-a-stream/
+        KthLargest obj = new KthLargest(3, new int[]{4,5,8,2});
+        System.out.println(obj.add(3));
+        System.out.println(obj.add(5));
+        System.out.println(obj.add(10));
+        System.out.println(obj.add(9));
+        System.out.println(obj.add(4));
+
 
 
     }
