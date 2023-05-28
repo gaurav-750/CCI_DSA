@@ -68,12 +68,12 @@ public class Main {
 //        System.out.println(Arrays.toString(searchRange(arr, 1)));
 
 //        todo Bubble Sort
-//        int[] arr = {50, 13, -2, 0, 1};
+        int[] arr = {50, 13, -2, 0, 1};
 //        bubbleSort(arr);
 //        System.out.println(Arrays.toString(arr));
 
 //        todo Selection Sort
-//        selectionSort(arr);
+        selectionSort(arr);
 //        System.out.println(Arrays.toString(arr));
 
 //        todo Insertion Sort:

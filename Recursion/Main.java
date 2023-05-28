@@ -110,13 +110,13 @@ public class Main {
 //        printPathWithObstacles(0, 0, 3, "", pathArr);
 
 //        todo N Queens
-//        int n = 4;
-//        char[][] chessBoard = new char[n][n];
-//        for (char[] arr: chessBoard){
-//            Arrays.fill(arr, '.');
-//        }
-//        List<List<String>> list = new ArrayList<>();
-//        nQueens(0, 0, n, chessBoard, list);
+        int n = 4;
+        char[][] chessBoard = new char[n][n];
+        for (char[] arr: chessBoard){
+            Arrays.fill(arr, '.');
+        }
+        List<List<String>> list = new ArrayList<>();
+        nQueens(0, 0, n, chessBoard, list);
 //        System.out.println(list);
 
 //        todo Sudoku Solver
@@ -129,7 +129,7 @@ public class Main {
                 {'.','2','.','.','.','.','2','8','.'},
                 {'.','.','.','4','1','9','.','.','5'},
                 {'.','.','.','.','8','.','.','7','9'}};
-        helper(board, 0, 0);
+//        helper(board, 0, 0);
 
 
     }
