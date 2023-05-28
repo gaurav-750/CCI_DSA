@@ -30,15 +30,100 @@ public class Striver_Playlist {
 //        System.out.println("Total Unique Paths: " + uniquePaths(3, 3));
 
 //        todo https://www.codingninjas.com/codestudio/problems/maze-obstacles_977241
-        int[][] mat = {
-                {0,0,0},
-                {0,-1,0},
-                {0,0,0}};
-        System.out.println("Paths with obstacles: " + uniquePathsWithObstacles(3, 3, mat));
+//        int[][] mat = {
+//                {0,0,0},
+//                {0,-1,0},
+//                {0,0,0}};
+//        System.out.println("Paths with obstacles: " + uniquePathsWithObstacles(3, 3, mat));
+
+//        todo https://leetcode.com/problems/minimum-path-sum/description/
+//        int[][] path = {
+//                {1,3,1},
+//                {1,5,1},
+//                {4,2,1}};
+//        System.out.println("Min Path Sum: " + minimumPathSum(path));
+
+//        todo https://www.codingninjas.com/codestudio/problems/triangle_1229398
+        int[][] triangle = {
+                {1},
+                {2,3},
+                {3,6,7},
+                {8,9,6,10}};
+        System.out.println("Min Path Sum Triangle: " + minPathSumTriangle(triangle));
 
 
 
 
+    }
+
+    private static int minPathSumTriangle(int[][] triangle) {
+        int[][] dp = new int[triangle.length][triangle.length];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return minPathSumTriangleHelper(0, 0, triangle, dp);
+    }
+
+    private static int minPathSumTriangleHelper(int i, int j, int[][] triangle, int[][] dp) {
+//        base case -> you have reached the last row
+        if (i == triangle.length-1)
+            return triangle[i][j];
+
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        //down
+        int down = minPathSumTriangleHelper(i+1, j, triangle, dp);
+
+        //diagonal
+        int diagonal = minPathSumTriangleHelper(i+1, j+1, triangle, dp);
+
+        dp[i][j] = triangle[i][j] + Math.min(down, diagonal);
+        return dp[i][j];
+    }
+
+    private static int minimumPathSum(int[][] path) {
+        int[][] dp = new int[path.length][path[0].length];
+//        for (int[] arr: dp)
+//            Arrays.fill(arr, -1);
+//
+//        return minPathHelper(0, 0, path, dp);
+
+//        TABULATION
+        int m = path.length-1, n = path[0].length-1;
+        for (int i = m; i >= 0; i--) {
+            for (int j = n; j >= 0; j--) {
+                if (i == m && j == n) { //base case
+                    dp[i][j] = path[i][j];
+                    continue;
+                }
+
+                int right = Integer.MAX_VALUE, down = Integer.MAX_VALUE;
+                if (j+1 <= n)
+                    right = dp[i][j+1];
+                if (i+1 <= m)
+                    down = dp[i+1][j];
+
+                dp[i][j] = path[i][j] + Math.min(right, down);
+            }
+        }
+        return dp[0][0];
+    }
+
+    private static int minPathHelper(int i, int j, int[][] path, int[][] dp) {
+        if (i >= path.length || j >= path[0].length)
+            return Integer.MAX_VALUE;
+//        base case
+        if ((i == path.length-1 )&& (j == path[0].length-1))
+            return path[i][j];
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        int right = minPathHelper(i, j+1, path, dp);
+        int down = minPathHelper(i+1, j, path, dp);
+
+        dp[i][j] = path[i][j] + Math.min(right, down);
+        return dp[i][j];
     }
 
     private static int uniquePathsWithObstacles(int m, int n, int[][] mat) {
