@@ -44,16 +44,95 @@ public class Striver_Playlist {
 //        System.out.println("Min Path Sum: " + minimumPathSum(path));
 
 //        todo https://www.codingninjas.com/codestudio/problems/triangle_1229398
-        int[][] triangle = {
-                {1},
-                {2,3},
-                {3,6,7},
-                {8,9,6,10}};
-        System.out.println("Min Path Sum Triangle: " + minPathSumTriangle(triangle));
+//        int[][] triangle = {
+//                {1},
+//                {2,3},
+//                {3,6,7},
+//                {8,9,6,10}};
+//        System.out.println("Min Path Sum Triangle: " + minPathSumTriangle(triangle));
+
+//        todo https://leetcode.com/problems/minimum-falling-path-sum/
+//        int[][] mat = {
+//                {2,1,3},
+//                {6,5,4},
+//                {7,8,9}};
+//        System.out.println("Minimum falling path sum: " + minimumFallingSum(mat));
+        // NOTE - We can also do this sum using 'Tabulation'. It will also remove the
+        // extra Recursion stack space O(n)
+
+//        todo https://www.codingninjas.com/codestudio/problems/subset-sum-equal-to-k_1550954
+        int[] arr = {1,7,2,9,0};
+        System.out.println("Subset sum equal to k: " + subsetSumToK(arr, 6));
 
 
 
+    }
 
+    private static boolean subsetSumToK(int[] arr, int k) {
+        int[][] dp = new int[arr.length][k+1];
+        for (int[] array : dp)
+            Arrays.fill(array, -1);
+
+        return subsetSumToKHelper(0, arr, k, dp) == 1;
+    }
+
+    private static int subsetSumToKHelper(int i, int[] arr, int target, int[][] dp) {
+//        base case
+        if (target == 0) return 1;
+        if (i == arr.length-1)
+            return arr[i] == target ? 1 : 0;
+
+        if (dp[i][target] != -1)
+            return dp[i][target];
+
+        //don't take
+        int notTaken = subsetSumToKHelper(i+1, arr, target, dp);
+        if (notTaken == 1) {
+            dp[i][target] = 1;
+            return 1;
+        }
+
+        //take
+        int taken = 0;
+        if (target - arr[i] >= 0)
+            taken = subsetSumToKHelper(i+1, arr, target-arr[i], dp);
+        dp[i][target] = taken;
+        return dp[i][target];
+    }
+
+    private static int minimumFallingSum(int[][] mat) {
+        int[][] dp = new int[mat.length][mat[0].length];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < mat[0].length; i++) {
+            min = Math.min(min, minimumFallingSumHelper(0, i, mat, dp));
+        }
+        return min;
+    }
+
+    private static int minimumFallingSumHelper(int i, int j, int[][] mat, int[][] dp) {
+//        base cases
+        if (j < 0 || j >= mat[0].length)
+            return Integer.MAX_VALUE;
+        if (i == mat.length-1)
+            return mat[i][j];
+
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        // left diagonal
+        int leftDiag = minimumFallingSumHelper(i+1, j-1, mat, dp);
+
+        //down
+        int down = minimumFallingSumHelper(i+1, j, mat, dp);
+
+        //right diagonal
+        int rightDiag = minimumFallingSumHelper(i+1, j+1, mat, dp);
+
+        dp[i][j] = mat[i][j] + Math.min(down, Math.min(leftDiag, rightDiag));
+        return dp[i][j];
     }
 
     private static int minPathSumTriangle(int[][] triangle) {
