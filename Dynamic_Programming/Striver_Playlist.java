@@ -1,6 +1,5 @@
 package Dynamic_Programming;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Striver_Playlist {
@@ -78,11 +77,84 @@ public class Striver_Playlist {
 //        System.out.println("Maximum value: " + knapSack(weights, values, 4));
 
 //        todo https://leetcode.com/problems/coin-change/
-        int[] coins = {1,2147483647};
-        System.out.println("Minimum coins: " + minimumCoins(coins, 2));
+//        int[] coins = {1,2147483647};
+//        System.out.println("Minimum coins: " + minimumCoins(coins, 2));
+
+//        todo https://leetcode.com/problems/coin-change-ii/
+//        int[] coins = {1,2,3};
+//        System.out.println("All Combinations of coins: " + allCombinationOfCoins(coins, 4));
+
+//        todo https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
+        int[] weights = {2,4,6};
+        int[] values = {5,11,13};
+        System.out.println("Maximum loot: " +
+                knapSackWithInfiniteSupply(weights, values, 10));
 
 
 
+
+    }
+
+    private static int knapSackWithInfiniteSupply(int[] weights, int[] values, int bagWeight) {
+        int[][] dp = new int[weights.length][bagWeight+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return knapSackInfiniteSupplyHelper(0, weights, values, bagWeight, dp);
+    }
+
+    private static int knapSackInfiniteSupplyHelper(int i, int[] weights, int[] values, int bagWeight, int[][] dp) {
+//        base case
+        if (bagWeight == 0)
+            return 0;
+        if (i == weights.length-1)
+            return (bagWeight/weights[i]) * values[i];
+
+        if (dp[i][bagWeight] != -1)
+            return dp[i][bagWeight];
+
+        //dont take
+        int notTake = knapSackInfiniteSupplyHelper(i+1, weights, values, bagWeight, dp);
+
+        //take
+        int take = Integer.MIN_VALUE;
+        if (weights[i] <= bagWeight)
+            take = values[i] +
+                    knapSackInfiniteSupplyHelper(i, weights, values, bagWeight - weights[i], dp);
+
+        dp[i][bagWeight] = Math.max(notTake, take);
+        return dp[i][bagWeight];
+    }
+
+    private static int allCombinationOfCoins(int[] coins, int target) {
+        int[][] dp = new int[coins.length][target+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return allCombinationOfCoinsHelper(0, coins, target, dp);
+    }
+
+    private static int allCombinationOfCoinsHelper(int i, int[] coins, int target, int[][] dp) {
+//        base case
+        if (target == 0)
+            return 1;
+        if (i == coins.length-1){
+            if (target % coins[i] == 0)
+                return 1;
+            return 0;
+        }
+
+        if (dp[i][target] != -1)
+            return dp[i][target];
+
+        int notTake = allCombinationOfCoinsHelper(i+1, coins, target, dp);
+
+        int take = 0;
+        if (coins[i] <= target)
+            take = allCombinationOfCoinsHelper(i, coins, target-coins[i], dp);
+
+        dp[i][target] = notTake+take;
+        return notTake + take;
     }
 
     private static int minimumCoins(int[] coins, int target) {
