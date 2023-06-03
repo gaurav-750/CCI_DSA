@@ -61,11 +61,136 @@ public class Striver_Playlist {
         // extra Recursion stack space O(n)
 
 //        todo https://www.codingninjas.com/codestudio/problems/subset-sum-equal-to-k_1550954
-        int[] arr = {1,7,2,9,0};
-        System.out.println("Subset sum equal to k: " + subsetSumToK(arr, 6));
+//        int[] arr = {1,7,2,9,0};
+//        System.out.println("Subset sum equal to k: " + subsetSumToK(arr, 6));
+
+//        todo https://leetcode.com/problems/partition-equal-subset-sum/
+//        int[] nums = {1,5,11,5};
+//        System.out.println("Can Partition: " + canPartition(nums));
+
+//        todo https://www.codingninjas.com/codestudio/problems/number-of-subsets_3952532
+//        int[] nums = {1, 1, 0, 0, 0, 0, 1, 1, 1, 1};
+//        System.out.println("Total Subsets: " + countSubsets(nums, 1));
+
+//        todo https://practice.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1
+//        int[] weights = {4,5,1};
+//        int[] values = {1,2,3};
+//        System.out.println("Maximum value: " + knapSack(weights, values, 4));
+
+//        todo https://leetcode.com/problems/coin-change/
+        int[] coins = {1,2147483647};
+        System.out.println("Minimum coins: " + minimumCoins(coins, 2));
 
 
 
+    }
+
+    private static int minimumCoins(int[] coins, int target) {
+        int[][] dp = new int[coins.length][target+1];
+        for (int[] arr : dp)
+            Arrays.fill(arr, -1);
+
+        int ans = coinHelper(0, coins, target, dp);
+        if (ans >= (int) 1e9)
+            return -1;
+        return ans;
+    }
+
+    private static int coinHelper(int i, int[] coins, int target, int[][] dp) {
+//        base case
+        if (i >= coins.length) return (int) 1e9;
+        if (i == coins.length-1){
+            if (target % coins[i] == 0)
+                return target/coins[i];
+            return (int) 1e9;
+        }
+        if (target == 0)
+            return 0;
+
+        if (dp[i][target] != -1)
+            return dp[i][target];
+
+        //dont take
+        int notTake = coinHelper(i+1, coins, target, dp);
+
+        //take and (you may take it again)
+        int take = Integer.MAX_VALUE;
+        if (coins[i] <= target)
+            take = 1 + coinHelper(i, coins, target - coins[i], dp);
+
+        dp[i][target] = Math.min(notTake, take);
+        return Math.min(notTake, take);
+    }
+
+    private static int knapSack(int[] weights, int[] values, int bagWeight) {
+        int[][] dp = new int[weights.length][bagWeight+1];
+        for (int[] arr : dp)
+            Arrays.fill(arr, -1);
+
+        return knapSackHelper(0, weights, values, bagWeight, dp);
+    }
+
+    private static int knapSackHelper(int i, int[] weights, int[] values, int bagWeight, int[][] dp) {
+//        base case
+        if (i == weights.length-1)
+            return weights[i] <= bagWeight ? values[i] : 0;
+
+        if (dp[i][bagWeight] != -1)
+            return dp[i][bagWeight];
+
+        //not take
+        int notTake = knapSackHelper(i+1, weights, values, bagWeight, dp);
+
+        //take
+        int take = Integer.MIN_VALUE;
+        if (weights[i] <= bagWeight)
+            take = values[i] + knapSackHelper(i+1, weights, values, bagWeight-weights[i], dp);
+
+        dp[i][bagWeight] = Math.max(notTake, take);
+        return dp[i][bagWeight];
+    }
+
+    private static int countSubsets(int[] nums, int target) {
+        int[][] dp = new int[nums.length][target+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return countSubsetsHelper(0, nums, target, dp);
+    }
+
+    private static int countSubsetsHelper(int i, int[] nums, int target, int[][] dp) {
+//        base case
+        if (target == 0) return 1;
+        if (i == nums.length-1)
+            return nums[i] == target ? 1 : 0;
+
+        if (dp[i][target] != -1)
+            return dp[i][target];
+
+        // take
+        int take = 0;
+        if (nums[i] <= target)
+            take = countSubsetsHelper(i+1, nums, target-nums[i], dp);
+
+        // don't take
+        int notTake = countSubsetsHelper(i+1, nums, target, dp);
+        dp[i][target] = take + notTake;
+        return take + notTake;
+    }
+
+    private static boolean canPartition(int[] nums) {
+        int totalSum = 0;
+        for (int num: nums)
+            totalSum += num;
+
+        //if totalSum is odd -> we cannot partition array into equal subset
+        if (totalSum % 2 != 0) return false;
+
+        int target = totalSum/2;
+        int[][] dp = new int[nums.length][target+1];
+        for (int[] array : dp)
+            Arrays.fill(array, -1);
+        return subsetSumToKHelper(0, nums, target, dp) == 1;
     }
 
     private static boolean subsetSumToK(int[] arr, int k) {
