@@ -85,14 +85,46 @@ public class Striver_Playlist {
 //        System.out.println("All Combinations of coins: " + allCombinationOfCoins(coins, 4));
 
 //        todo https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
-        int[] weights = {2,4,6};
-        int[] values = {5,11,13};
-        System.out.println("Maximum loot: " +
-                knapSackWithInfiniteSupply(weights, values, 10));
+//        int[] weights = {2,4,6};
+//        int[] values = {5,11,13};
+//        System.out.println("Maximum loot: " +
+//                knapSackWithInfiniteSupply(weights, values, 10));
+
+//        todo https://practice.geeksforgeeks.org/problems/rod-cutting0840/1
+//        int[] prices = {3, 5, 8, 9, 10, 17, 17, 20};
+//        System.out.println("Cut rod: " + cutRod(prices, 8));
 
 
+    }
 
+    private static int cutRod(int[] prices, int rodLength) {
+        int[][] dp = new int[prices.length][rodLength+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
 
+        return cutRodHelper(0, prices, rodLength, dp);
+    }
+
+    private static int cutRodHelper(int i, int[] prices, int rodLength, int[][] dp) {
+//        base case
+        if (rodLength == 0)
+            return 0;
+        if (i == prices.length-1)
+            return (rodLength/(i+1)) * prices[i];
+
+        if (dp[i][rodLength] != -1)//if the value has already been calculated, return ans
+            return dp[i][rodLength];
+
+        //dont take
+        int notTake = cutRodHelper(i+1, prices, rodLength, dp);
+
+        //take
+        int take = Integer.MIN_VALUE;
+        if (i+1 <= rodLength)
+            take = prices[i] + cutRodHelper(i, prices, rodLength-(i+1), dp);
+
+        dp[i][rodLength] = Math.max(notTake, take);
+        return Math.max(notTake, take);
     }
 
     private static int knapSackWithInfiniteSupply(int[] weights, int[] values, int bagWeight) {
