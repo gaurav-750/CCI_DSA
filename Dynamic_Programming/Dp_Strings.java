@@ -1,5 +1,6 @@
 package Dynamic_Programming;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -14,10 +15,54 @@ public class Dp_Strings {
 //                printLCS(0, 0, "adebc", "acadb"));
 
 //        todo https://leetcode.com/problems/longest-palindromic-subsequence/
-        System.out.println("Longest Palindromic Subsequence: " +
-                longestPalindromicSubsequence("bbbab"));
+//        System.out.println("Longest Palindromic Subsequence: " +
+//                longestPalindromicSubsequence("bbbab"));
 
+//        todo https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+//        System.out.println("Minimum insertions to make a string palindrome: " +
+//                minInsertions("abcaa"));
 
+//        todo https://practice.geeksforgeeks.org/problems/minimum-number-of-deletions-and-insertions0209/1
+//        System.out.println("Minimum insertions/deletions to convert string a -> b: " +
+//                minOperations("heap", "pea"));
+
+//        todo https://www.codingninjas.com/codestudio/problems/best-time-to-buy-and-sell-stock_893405
+//        int[] prices = {7,1,5,3,6,4};
+//        System.out.println("Max profit: " + maxProfit(prices));
+
+//        todo https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+        int[] prices = {7,1,5,3,6,4};
+        System.out.println("Total Profit: " + maximumProfit(prices));
+
+    }
+
+    private static int maximumProfit(int[] prices) {
+        int totalProfit = 0;
+        for (int i = 1; i < prices.length; i++) {
+
+            if (prices[i] > prices[i-1])
+                totalProfit += (prices[i] - prices[i-1]);
+        }
+        return totalProfit;
+    }
+
+    private static int maxProfit(int[] prices) {
+        int buyPrice = prices[0], maxProfit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            int profitIfSoldToday = prices[i] - buyPrice;
+            maxProfit = Math.max(maxProfit, profitIfSoldToday);
+
+            buyPrice = Math.min(buyPrice, prices[i]);
+        }
+        return maxProfit;
+    }
+
+    private static int minOperations(String s1, String s2) {
+        return s1.length() + s2.length() - (2 * longestCommonSubsequence(s1, s2));
+    }
+
+    private static int minInsertions(String s) {
+        return s.length() - longestPalindromicSubsequence(s);
     }
 
     private static int longestPalindromicSubsequence(String s1) {
