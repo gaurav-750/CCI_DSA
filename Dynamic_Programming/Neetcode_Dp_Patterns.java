@@ -1,6 +1,17 @@
 package Dynamic_Programming;
 
 import java.util.Arrays;
+import java.util.HashMap;
+
+class Pair{
+    int index;
+    int target;
+
+    public Pair(int index, int target){
+        this.index = index;
+        this.target = target;
+    }
+}
 
 public class Neetcode_Dp_Patterns {
     public static void main(String[] args) {
@@ -16,12 +27,92 @@ public class Neetcode_Dp_Patterns {
 //        System.out.println("Rob Houses: " + robHouses(houses));
 
 //        todo https://leetcode.com/problems/maximum-alternating-subsequence-sum/
-        int[] nums = {6,2,1,2,4,5};
-        System.out.println("Max Alternating sum: " + maxAlternatingSum(nums));
+//        int[] nums = {6,2,1,2,4,5};
+//        System.out.println("Max Alternating sum: " + maxAlternatingSum(nums));
+
+
+        // 2. 0/1 Knapsack
+//        todo https://leetcode.com/problems/partition-equal-subset-sum/
+//        int[] nums = {1,2,3,5};
+//        System.out.println("Can Partition: " + canPartition(nums));
+
+//        todo https://leetcode.com/problems/target-sum/
+        int[] nums = {1,1,1,1,1};
+        System.out.println("Total target ways: " + findTargetSumWays(nums, 3));
 
 
 
 
+    }
+
+    private static int findTargetSumWays(int[] nums, int target) {
+        HashMap<Pair, Integer> map = new HashMap<>();
+
+        return findTargetSumWaysHelper(0, nums, target, map);
+    }
+
+    private static int findTargetSumWaysHelper(int i, int[] nums, int target, HashMap<Pair, Integer> dp) {
+        //base case
+        if (i == nums.length)
+            return target == 0 ? 1 : 0;
+
+//        if (dp.containsKey(new Pair(i, target))) {
+//            System.out.println("Cache");
+//            return dp.get(new Pair(i, target));
+//        }
+        System.out.println(i + ", " + target);
+
+        //add
+        int add = findTargetSumWaysHelper(i+1, nums, target-nums[i], dp);
+
+        //subtract
+        int sub = findTargetSumWaysHelper(i+1, nums, target+nums[i], dp);
+
+        dp.put(new Pair(i, target), add+sub); //add (cache) it to HashMap
+        return add+sub;
+    }
+
+    private static boolean canPartition(int[] nums) {
+        int totalSum = 0;
+        for (int num: nums)
+            totalSum += num;
+
+        //if totalsum is odd - we cannot partition
+        if (totalSum%2 != 0)
+            return false;
+
+        int target = (totalSum/2);
+        int[][] dp = new int[nums.length][target+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+        return sumToK(0, target, nums, dp);
+    }
+
+    private static boolean sumToK(int i, int target, int[] nums, int[][] dp) {
+        //base case
+        if (target == 0)
+            return true;
+        if (i >= nums.length)
+            return false;
+
+        if (dp[i][target] != -1)
+            return dp[i][target] == 1;
+
+
+        //take
+        boolean take = false;
+        if (nums[i] <= target) {
+            take = sumToK(i+1, target - nums[i], nums, dp);
+            if (take) {
+                dp[i][target] = 1;
+                return true;
+            }
+        }
+
+        //not take
+        boolean notTake = sumToK(i+1, target, nums, dp);
+        dp[i][target] = notTake ? 1 : 0;
+        return notTake;
     }
 
     private static long maxAlternatingSum(int[] nums) {
