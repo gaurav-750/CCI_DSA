@@ -11,6 +11,27 @@ class Pair{
         this.index = index;
         this.target = target;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + index;
+        result = prime * result + target;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Pair other = (Pair) obj;
+        if (index != other.index)
+            return false;
+        return target == other.target;
+    }
 }
 
 public class Neetcode_Dp_Patterns {
@@ -37,17 +58,138 @@ public class Neetcode_Dp_Patterns {
 //        System.out.println("Can Partition: " + canPartition(nums));
 
 //        todo https://leetcode.com/problems/target-sum/
-        int[] nums = {1,1,1,1,1};
-        System.out.println("Total target ways: " + findTargetSumWays(nums, 3));
+//        int[] nums = {1,1,1,1,1};
+//        System.out.println("Total target ways: " + findTargetSumWays(nums, 3));
 
+
+        // 3. Unbounded Knapsack
+//        todo https://leetcode.com/problems/coin-change/
+//        int[] coins = {1,2,5};
+//        System.out.println("Minimum number of coins: " + coinChange(coins, 11));
+
+//        todo https://leetcode.com/problems/coin-change-ii/
+//        int[] coins = {1,2,5};
+//        System.out.println("Total number of combinations: " +
+//                change(coins, 5));
+
+//        todo https://leetcode.com/problems/minimum-cost-for-tickets/
+        int[] days = {1,4,6,7,8,20};
+        int[] costs = {2,7,15};
+        System.out.println("Min Cost of ticket: " + minCostOfTickets(days, costs));
 
 
 
     }
 
+    private static int minCostOfTickets(int[] days, int[] costs) {
+        int[] dp = new int[days.length];
+        Arrays.fill(dp, -1);
+
+        return minTicketCostHelper(0, days, costs, dp);
+    }
+
+    private static int minTicketCostHelper(int i, int[] days, int[] costs, int[] dp) {
+        //base case
+        if (i >= days.length)
+            return 0;
+
+        if (dp[i] != -1)//already calculated
+            return dp[i];
+
+        //1 day pass
+        int oneDay = costs[0] + minTicketCostHelper(i+1, days, costs, dp);
+
+        //7 day pass
+        int nextIndex = nextIndex(i, 7, days);
+        int sevenDays = costs[1] + minTicketCostHelper(nextIndex, days, costs, dp);
+
+        //30 day pass
+        nextIndex = nextIndex(i, 30, days);
+        int thirtyDays = costs[2] + minTicketCostHelper(nextIndex, days, costs, dp);
+
+        dp[i] = Math.min(oneDay, Math.min(sevenDays, thirtyDays));
+        return dp[i];
+    }
+
+    private static int nextIndex(int curDayIndex, int numOfDays, int[] days) {
+        int lastDay = days[curDayIndex]+numOfDays-1;
+        int i = curDayIndex;
+        while (i < days.length && days[i] <= lastDay)
+            i++;
+        return i;
+    }
+
+
+    private static int change(int[] coins, int target) {
+        int[][] dp = new int[coins.length][target+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return changeHelper(0, target, coins, dp);
+    }
+
+    private static int changeHelper(int i, int target, int[] coins, int[][] dp) {
+        //base case
+        if (target == 0)
+            return 1;
+        if (i == coins.length-1){
+            if (target%coins[i] == 0)
+                return 1;
+            else
+                return 0;
+        }
+
+        if (dp[i][target] != -1) //already calculated
+            return dp[i][target];
+
+        int take = 0;
+        if (coins[i] <= target)
+            take = changeHelper(i, target-coins[i], coins, dp);
+
+        int notTake = changeHelper(i+1, target, coins, dp);
+
+        dp[i][target] = take + notTake;
+        return take+notTake;
+    }
+
+    private static int coinChange(int[] coins, int target) {
+        int[][] dp = new int[coins.length][target+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        int ans = coinHelper(0, coins, target, dp);
+        return ans != (int) 1e9 ? ans : -1;
+    }
+
+    private static int coinHelper(int i, int[] coins, int target, int[][] dp) {
+        //base case
+        if (i == coins.length-1){
+            if (target % coins[i] == 0)
+                return target/coins[i];
+            else
+                return (int) 1e9;
+        }
+        if (target == 0)
+            return 0;
+
+        if (dp[i][target] != -1) //already calculated
+            return dp[i][target];
+
+
+        //take
+        int take = Integer.MAX_VALUE;
+        if (coins[i] <= target)
+            take = 1 + coinHelper(i, coins, target - coins[i], dp);
+
+        //dont take
+        int notTake = coinHelper(i+1, coins, target, dp);
+
+        dp[i][target] = Math.min(take, notTake);
+        return Math.min(take, notTake);
+    }
+
     private static int findTargetSumWays(int[] nums, int target) {
         HashMap<Pair, Integer> map = new HashMap<>();
-
         return findTargetSumWaysHelper(0, nums, target, map);
     }
 
@@ -56,11 +198,10 @@ public class Neetcode_Dp_Patterns {
         if (i == nums.length)
             return target == 0 ? 1 : 0;
 
-//        if (dp.containsKey(new Pair(i, target))) {
-//            System.out.println("Cache");
-//            return dp.get(new Pair(i, target));
-//        }
-        System.out.println(i + ", " + target);
+        Pair pair = new Pair(i, target);
+        if (dp.containsKey(pair)) {
+            return dp.get(pair);
+        }
 
         //add
         int add = findTargetSumWaysHelper(i+1, nums, target-nums[i], dp);
