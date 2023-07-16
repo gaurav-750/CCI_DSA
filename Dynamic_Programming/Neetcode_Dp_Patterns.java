@@ -73,12 +73,43 @@ public class Neetcode_Dp_Patterns {
 //                change(coins, 5));
 
 //        todo https://leetcode.com/problems/minimum-cost-for-tickets/
-        int[] days = {1,4,6,7,8,20};
-        int[] costs = {2,7,15};
-        System.out.println("Min Cost of ticket: " + minCostOfTickets(days, costs));
+//        int[] days = {1,4,6,7,8,20};
+//        int[] costs = {2,7,15};
+//        System.out.println("Min Cost of ticket: " + minCostOfTickets(days, costs));
 
 
+        // 4. Longest Common Subsequence (LCS)
+//        todo https://leetcode.com/problems/longest-common-subsequence/
+        System.out.println("LCS: " + longestCommonSubsequence("abcde", "ace"));
 
+
+    }
+
+    private static int longestCommonSubsequence(String s1, String s2) {
+        int[][] dp = new int[s1.length()][s2.length()];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return lcsHelper(0, 0, s1, s2, dp);
+    }
+
+    private static int lcsHelper(int i, int j, String s1, String s2, int[][] dp) {
+        //base case
+        if (i >= s1.length() || j >= s2.length())
+            return 0;
+
+        if (dp[i][j] != -1) //already calculated
+            return dp[i][j];
+
+        if (s1.charAt(i) == s2.charAt(j)) {
+            dp[i][j] = 1 + lcsHelper(i + 1, j + 1, s1, s2, dp);
+            return dp[i][j];
+        }
+
+        //s1.charAt(i) != s2.charAt(j)
+        dp[i][j] = Math.max(
+                lcsHelper(i+1, j, s1, s2, dp), lcsHelper(i, j+1, s1, s2, dp));
+        return dp[i][j];
     }
 
     private static int minCostOfTickets(int[] days, int[] costs) {
