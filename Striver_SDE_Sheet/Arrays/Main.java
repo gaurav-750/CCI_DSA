@@ -50,6 +50,85 @@ public class Main {
 //        majorityElement2(nums);
 
 
+//        todo BINARY SEARCH
+//        todo https://www.codingninjas.com/studio/problems/1062679
+//        System.out.println("Nth root: " + NthRoot(69, 4));
+
+//        todo https://leetcode.com/problems/single-element-in-a-sorted-array/description/
+        int[] nums = {5,6,7,8,0,1,2,3,4};
+//        System.out.println("Single kon hai: " + singleNonDuplicate(nums));
+
+//        todo https://leetcode.com/problems/search-in-rotated-sorted-array/
+        System.out.println("Index: " + search(nums, 7));
+
+
+
+    }
+
+    private static int search(int[] nums, int x) {
+        //Binary search
+        int l = 0, r = nums.length-1, mid;
+
+        while (l <= r){
+            mid = (l+r)/2;
+
+            if (nums[mid] == x)
+                return mid;
+
+            if (nums[mid] < x && x <= nums[r])
+                l = mid+1;
+            else if (x > nums[mid] && x > nums[r])
+                r = mid-1;
+        }
+        return -1;
+    }
+
+    private static int singleNonDuplicate(int[] nums) {
+        if (nums.length == 1)
+            return nums[0];
+
+        //Binary search
+        int l = 0, r = nums.length-1, mid;
+
+        //boundary checks
+        if (nums[0] != nums[1]) return nums[0];
+        else if (nums[r] != nums[r-1]) return nums[r];
+
+        while (l <= r){
+            mid = (l+r)/2;
+
+            //check if this is the single one
+            if (nums[mid] != nums[mid-1] &&
+                 nums[mid] != nums[mid+1])
+                return nums[mid];
+
+            if (((mid%2 == 0) && nums[mid] == nums[mid+1]) ||
+                    ((mid%2 == 1) && nums[mid] == nums[mid-1]))
+                l = mid+1;
+            else
+                r = mid-1;
+        }
+        return -1;
+    }
+
+    private static int NthRoot(int m, int n) {
+        //binary search
+        //range is gonna be [1 .... m]
+
+        int l = 1, r = m, mid;
+        while (l <= r){
+            mid = (l+r)/2;
+            int cur = (int) Math.pow(mid, n);
+
+            if (cur == m)
+                return mid;
+
+            if (cur > m)
+                r = mid-1;
+            else
+                l = mid+1;
+        }
+        return -1;
     }
 
     private static List<Integer> majorityElement2(int[] nums) {
