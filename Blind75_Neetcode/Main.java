@@ -128,14 +128,50 @@ public class Main {
 //        System.out.println("max = " + max);
 
 //        todo https://leetcode.com/problems/house-robber/
-        int[] money = {1,2,3};
+//        int[] money = {1,2,3};
 //        System.out.println("Max Rob: " + maxRob(money));
 
 //        todo https://leetcode.com/problems/house-robber-ii/
-        System.out.println("Max Circle House Rob: " + maxRob2(money));
+//        System.out.println("Max Circle House Rob: " + maxRob2(money));
+
+//        todo https://leetcode.com/problems/longest-palindromic-substring/description/
+        System.out.println("LPS: " +
+                longestPalindromeSubstring("babad"));
 
 
 
+    }
+
+    private static String longestPalindromeSubstring(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+
+        //make the diagonal 1 -  as a character is always a palindrome
+        for (int i = 0; i < n; i++)
+            dp[i][i] = 1;
+
+        int k = n-1, l = 1;
+        int i, j, maxi = 0, maxj = 0;
+        //i and j are actual pointers for the string
+        while (k >= 0){
+            i = 0; j = l;
+            while (i < k && j < n){
+                if (s.charAt(i) == s.charAt(j)){
+                    if (j-i == 1 || dp[i+1][j-1] == 1) { // (j-i == 1) condition is for, if the indices are 1,2 or 2,3
+                        dp[i][j] = 1;
+
+                        //update the max palindromic substring
+                        if (maxj-maxi+1 < (j-i+1)) {
+                            maxi = i;
+                            maxj = j;
+                        }
+                    }
+                }
+                i++; j++;
+            }
+            k--; l++;
+        }
+        return s.substring(maxi, maxj+1);
     }
 
     private static int maxRob2(int[] money) {
