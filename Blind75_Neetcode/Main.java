@@ -4,8 +4,20 @@ import java.util.*;
 
 import BinaryTrees.BinaryTree;
 import BinaryTrees.TreeNode;
-import LinkedList.Linked_List;
 import LinkedList.Node;
+
+
+class BSTReturn{
+    boolean isBST;
+    int min;
+    int max;
+
+    public BSTReturn(boolean isBST, int min, int max) {
+        this.isBST = isBST;
+        this.min = min;
+        this.max = max;
+    }
+}
 
 public class Main {
     public static void main(String[] args) {
@@ -82,19 +94,222 @@ public class Main {
 //        ll.printLL(removeNthFromEnd(head, 1));
 
 //        todo https://leetcode.com/problems/invert-binary-tree/
-        BinaryTree obj = new BinaryTree();
-        TreeNode<Integer> root = obj.takeInput();
+//        BinaryTree obj = new BinaryTree();
+//        TreeNode<Integer> root = obj.takeInput();
 //        obj.printBinaryTree(invertBinaryTree(root));
 
 //        todo https://leetcode.com/problems/same-tree/
-        TreeNode<Integer> root2 = obj.takeInput();
+//        TreeNode<Integer> root2 = obj.takeInput();
 //        System.out.println("Is same tree: " + isSameTree(root, root2));
 
 //        todo https://leetcode.com/problems/subtree-of-another-tree/
-        System.out.println("Is Sub Root: " + isSubTree(root, root2));
+//        System.out.println("Is Sub Root: " + isSubTree(root, root2));
+
+//        todo https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+//        TreeNode<Integer> p = obj.takeInput(), q = obj.takeInput();
+//        lowestCommonAncestor(root, p, q);
+
+//        todo https://leetcode.com/problems/binary-tree-level-order-traversal/
+//        levelOrder(root);
+
+//        todo https://leetcode.com/problems/validate-binary-search-tree/
+//        System.out.println(validIsBST(root).isBST);
+
+//        todo https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+//        kthSmallestElement(root, 3);
+
+//        todo https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+//        int[] preorder = {3,9,20,15,7};
+//        int[] inorder = {9,3,15,20,7};
+//        constructTree(preorder, inorder);
+
+//        todo https://leetcode.com/problems/binary-tree-maximum-path-sum/
+//        maxPathSum(root);
+//        System.out.println("max = " + max);
+
+//        todo https://leetcode.com/problems/house-robber/
+        int[] money = {1,2,3};
+//        System.out.println("Max Rob: " + maxRob(money));
+
+//        todo https://leetcode.com/problems/house-robber-ii/
+        System.out.println("Max Circle House Rob: " + maxRob2(money));
 
 
 
+    }
+
+    private static int maxRob2(int[] money) {
+        int[] dp = new int[money.length];
+        Arrays.fill(dp, -1);
+
+        int x = circleHouseRob(money, dp, 0, money.length-2);
+        Arrays.fill(dp, -1);
+        int y = circleHouseRob(money, dp, 1, money.length-1);
+        return Math.max(x, y);
+    }
+
+    private static int circleHouseRob(int[] money, int[] dp, int i, int n) {
+        //base case
+        if (i > n)
+            return 0;
+        if (dp[i] != -1)
+            return dp[i];
+
+
+        int rob = money[i] + circleHouseRob(money, dp, i+2, n);
+        int notRob = circleHouseRob(money, dp, i+1, n);
+
+        dp[i] = Math.max(rob, notRob);
+        return dp[i];
+    }
+
+    private static int maxRob(int[] money) {
+        int[] dp = new int[money.length];
+        Arrays.fill(dp, -1);
+
+        return maxRobHelper(money, dp, 0);
+    }
+
+    private static int maxRobHelper(int[] money, int[] dp, int i) {
+        //base case
+        if (i >= money.length)
+            return 0;
+        if (dp[i] != -1)
+            return dp[i];
+
+
+        //rob
+        int rob = money[i] + maxRobHelper(money, dp, i+2);
+
+        //do not rob
+        int notRob = maxRobHelper(money, dp, i+1);
+        dp[i] = Math.max(rob, notRob);
+        return dp[i];
+    }
+
+    static int max = 0;
+    private static int maxPathSum(TreeNode<Integer> root) {
+        //base case
+        if (root == null)
+            return 0;
+
+        int leftSum = maxPathSum(root.left);
+        int rightSum = maxPathSum(root.right);
+
+        leftSum = Math.max(leftSum, 0);
+        rightSum = Math.max(rightSum, 0);
+
+        max = Math.max(max, root.data+leftSum+rightSum);
+        return root.data + Math.max(leftSum, rightSum);
+    }
+
+    private static TreeNode<Integer> constructTree(int[] preorder, int[] inorder) {
+        return helpConstructTree(preorder, inorder, 0, inorder.length-1, 0, inorder.length-1);
+    }
+
+    private static TreeNode<Integer> helpConstructTree(int[] preorder, int[] inorder, int sp, int ep, int si, int ei) {
+        //base case
+        System.out.println(sp + ", " + ep);
+        if (si > ei || sp > ep)
+            return null;
+
+        int rootData = preorder[sp];
+        int index = findIndexInInorder(inorder, rootData);
+
+        int lenOfSubTree = index - si;
+        TreeNode<Integer> root = new TreeNode<>(rootData);
+
+        root.left = helpConstructTree(preorder, inorder, sp+1, sp+lenOfSubTree, si, index-1);
+        root.right = helpConstructTree(preorder, inorder, sp+lenOfSubTree+1, ep, index+1, ei);
+        return root;
+    }
+
+    private static int findIndexInInorder(int[] inorder, int x) {
+        for (int i = 0; i < inorder.length; i++) {
+            if (inorder[i] == x)
+                return i;
+        }
+        return -1;
+    }
+
+    private static Integer kthSmallestElement(TreeNode<Integer> root, int k) {
+        Stack<Integer> stack = new Stack<>();
+        buildStack(root, stack);
+
+        int toBeRemoved = stack.size() - k;
+        for (int i = 0; i < toBeRemoved; i++)
+            stack.pop();
+        return stack.peek();
+    }
+
+    private static void buildStack(TreeNode<Integer> root, Stack<Integer> stack) {
+        //base case
+        if (root == null)
+            return;
+
+        buildStack(root.left, stack);
+        stack.push(root.data);
+        buildStack(root.right, stack);
+    }
+
+    private static BSTReturn validIsBST(TreeNode<Integer> root) {
+        //base case
+        if (root == null)
+            return new BSTReturn(true, Integer.MAX_VALUE, Integer.MIN_VALUE);
+
+
+        BSTReturn left = validIsBST(root.left);
+        BSTReturn right = validIsBST(root.right);
+
+
+        boolean isBST = left.isBST && right.isBST;
+        if (root.data < left.max || root.data > right.min)
+            isBST = false;
+
+        int min = Math.min(root.data, Math.min(left.min, right.min));
+        int max = Math.max(root.data, Math.max(left.max, right.max));
+
+        return new BSTReturn(isBST, min, max);
+    }
+
+    private static List<List<Integer>> levelOrder(TreeNode<Integer> root) {
+        if (root == null)
+            return new ArrayList<>();
+
+        Queue<TreeNode<Integer>> queue = new LinkedList<>();
+        queue.add(root);
+
+        List<List<Integer>> res = new ArrayList<>();
+        while (!queue.isEmpty()){
+            List<Integer> ans = new ArrayList<>();
+            int n = queue.size();
+
+            while (n != 0){
+                TreeNode<Integer> frontNode = queue.poll();
+                ans.add(frontNode.data);
+
+                if (frontNode.left != null)
+                    queue.add(frontNode.left);
+                if (frontNode.right != null)
+                    queue.add(frontNode.right);
+                n--;
+            }
+            res.add(ans);
+        }
+        return res;
+    }
+
+    private static TreeNode<Integer> lowestCommonAncestor(TreeNode<Integer> root, TreeNode<Integer> p, TreeNode<Integer> q) {
+        //base case
+        if (root.data == p.data || root.data == q.data)
+            return root;
+
+        if (p.data < root.data  && q.data < root.data)
+            return lowestCommonAncestor(root.left, p, q);
+        if (p.data > root.data && q.data > root.data)
+            return lowestCommonAncestor(root.right, p, q);
+
+        return root;
     }
 
     private static boolean isSubTree(TreeNode<Integer> root, TreeNode<Integer> subRoot) {
