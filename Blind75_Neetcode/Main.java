@@ -1,5 +1,6 @@
 package Blind75_Neetcode;
 
+import java.lang.annotation.Target;
 import java.util.*;
 
 import BinaryTrees.BinaryTree;
@@ -135,11 +136,722 @@ public class Main {
 //        System.out.println("Max Circle House Rob: " + maxRob2(money));
 
 //        todo https://leetcode.com/problems/longest-palindromic-substring/description/
-        System.out.println("LPS: " +
-                longestPalindromeSubstring("babad"));
+//        System.out.println("LPS: " +
+//                longestPalindromeSubstring("babad"));
+
+//        todo https://leetcode.com/problems/coin-change/
+//        int[] coins = {2};
+//        System.out.println("Minimum Coin Change: " +
+//                minCoinChange(coins, 3));
+
+//        todo https://leetcode.com/problems/maximum-product-subarray/
+//        int[] nums = {-2,0,-1};
+//        System.out.println("Max Product SubArray: " + maxProductSubArray(nums));
+
+//        todo https://leetcode.com/problems/palindromic-substrings/
+//        System.out.println("Total Palindrome Count: " +
+//                totalPalindromicSubstrings("babad"));
+
+//        todo https://leetcode.com/problems/dungeon-game/description/
+//        int[][] mat = {{-2,-3,3},{-5,-10,1},{10,30,-5}};
+//        System.out.println("Minimum HP: " + calculateMinimumHP(mat));
+
+//        todo https://leetcode.com/problems/permutation-in-string/
+//        System.out.println("Contains Permutation: " + checkInclusion("ab", "eidboaoo"));
+
+//        todo https://leetcode.com/problems/minimum-window-substring/
+//        String s = "a", t = "aa";
+//        System.out.println("Min Window Substring: " +
+//                minWindowSubstring(s, t));
+
+//        todo https://leetcode.com/problems/generate-parentheses/
+//        generateParentheses(3);
+//        System.out.println(res);
+
+//        todo https://leetcode.com/problems/daily-temperatures/
+//        int[] temperatures = {73,74,75,71,69,72,76,73};
+//        dailyTemperatures(temperatures);
+
+//        todo https://leetcode.com/problems/koko-eating-bananas/
+//        int[] piles = {3,6,7,11}; int h = 8;
+//        System.out.println("Minimum bananas: " + minEatingSpeed(piles, h));
+
+//        todo https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+//        int[] nums = {4,5,6,7,8,1,2};
+//        System.out.println("Min in rotated sorted array: " +
+//                            findMinRotatedSortedArray(nums));
+
+//        todo https://leetcode.com/problems/search-in-rotated-sorted-array/
+//        int[] nums = {4,5,6,7,8,1,2};
+//        System.out.println("Index: " + searchInRotatedSortedArr(nums, 8));
+
+//        todo https://leetcode.com/problems/count-good-nodes-in-binary-tree/
+//        BinaryTree obj = new BinaryTree();
+//        TreeNode<Integer> root = obj.takeInput();
+//        totalGoodNodes(root);
+
+//        todo https://leetcode.com/problems/k-closest-points-to-origin/
+//        int[][] points = {{3,3},{5,-1},{-2,4}}; int k = 2;
+//        kClosestPoints(points, k);
+
+//        todo https://leetcode.com/problems/jump-game/
+        int[] nums = {2,3,1,1,4};
+//        System.out.println("Can Jump: " + jumpGame(nums));
+
+//        todo https://leetcode.com/problems/jump-game-ii/
+//        System.out.println("Min Jumps: " + minJumps(nums));
+
+//        todo https://leetcode.com/problems/hand-of-straights/
+//        int[] hand = {1,1,3,6,2,3,4,7,8}; int groupSize = 3;
+//        System.out.println("Divide array in set of k consecutive numbers: " +
+//                isNStraightHand(hand, groupSize));
+
+//        todo https://leetcode.com/problems/partition-labels/
+//        partitionLabels("ababcbacadefegdehijhklij");
+
+//        todo https://leetcode.com/problems/valid-parenthesis-string/
+//        System.out.println("Is Valid Parentheses: " + isValidParentheses("(*))" ));
+
+//        todo https://leetcode.com/problems/longest-increasing-subsequence/
+//        int[] arr = {0,1,0,3,2,3};
+//        System.out.println("Length Of LIS: " +
+//                lengthOfLIS(arr));
+
+//        todo https://leetcode.com/problems/longest-common-subsequence/
+//        System.out.println("LCS: " + longestCommonSubseq("abcde", "ace"));
+
+//        todo https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+//        int[] prices = {1,2,3,0,2};
+//        System.out.println("Max profit with cooldown: " +
+//                maxProfitWithCooldown(prices));
+
+//        todo https://leetcode.com/problems/coin-change-ii/
+//        int[] coins = {1,2,5};
+//        System.out.println("Total coins combinations: " +
+//                coinsCombinations(coins, 5));
+
+//        todo https://leetcode.com/problems/interleaving-string/
+        String s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc";
+        System.out.println("Is Interleave: " + isInterleave(s1, s2, s3));
 
 
 
+    }
+
+    private static boolean isInterleave(String s1, String s2, String s3) {
+        if (s1.length() + s2.length() != s3.length())
+            return false;
+        int[][] dp = new int[s1.length()+1][s2.length()+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+        return isInterleaveHelper(0, 0, s1, s2, s3, dp);
+    }
+
+    private static boolean isInterleaveHelper(int i, int j, String s1, String s2, String s3, int[][] dp) {
+        //base case
+        if (i+j == s3.length()) //string traversal is complete
+            return true;
+
+        if (dp[i][j] != -1)
+            return dp[i][j] == 1;
+
+        boolean first = i < s1.length() && s1.charAt(i) == s3.charAt(i + j);
+        boolean second = j < s2.length() && s2.charAt(j) == s3.charAt(i + j);
+
+        boolean ans = false;
+        if (first && second)
+            ans = isInterleaveHelper(i + 1, j, s1, s2, s3, dp) || isInterleaveHelper(i, j + 1, s1, s2, s3, dp);
+        else if (first)
+            ans = isInterleaveHelper(i + 1, j, s1, s2, s3, dp);
+        else if (second)
+            ans = isInterleaveHelper(i, j + 1, s1, s2, s3, dp);
+
+        dp[i][j] = ans ? 1 : 0;
+        return dp[i][j] == 1;
+    }
+
+    private static int coinsCombinations(int[] coins, int target) {
+        int[][] dp = new int[coins.length][target+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+        return changeHelper(0, 0, coins, target, dp);
+    }
+
+    private static int changeHelper(int ind, int sum, int[] coins, int target, int[][] dp) {
+        //base case
+        if (ind >= coins.length) return 0;
+        if (sum == target)
+            return 1;
+
+        if (dp[ind][sum] != -1)//already calculated
+            return dp[ind][sum];
+
+        //take the current coin, if we can take it
+        int take = 0;
+        if (sum + coins[ind] <= target){
+            take = changeHelper(ind, sum+coins[ind], coins, target, dp);
+        }
+
+        //skip the current coin
+        int dontTake = changeHelper(ind+1, sum, coins, target, dp);
+        dp[ind][sum] = take + dontTake;
+        return dp[ind][sum];
+    }
+
+    private static int maxProfitWithCooldown(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+        return maxProfitCooldownHelper(0, 1, prices, dp);
+    }
+
+    private static int maxProfitCooldownHelper(int i, int buy, int[] prices, int[][] dp) {
+        //base case
+        if (i >= prices.length)
+            return 0;
+
+        if (dp[i][buy] != -1)
+            return dp[i][buy];
+
+        int totalProfit = 0;
+        if (buy == 1){
+            //we can choose to buy it or skip it
+            int buyKiya = -prices[i] + maxProfitCooldownHelper(i+1, 0, prices, dp);
+            int skipKiya = maxProfitCooldownHelper(i+1, 1, prices, dp);
+
+            totalProfit = Math.max(buyKiya, skipKiya);
+        }else { //buy = 0
+            // we can choose to sell it or skip it
+            int sellKiya = prices[i] + maxProfitCooldownHelper(i+2, 1, prices, dp);
+            int skipKiya = maxProfitCooldownHelper(i+1, 0, prices, dp);
+
+            totalProfit = Math.max(sellKiya, skipKiya);
+        }
+
+        dp[i][buy] = totalProfit;
+        return totalProfit;
+    }
+
+    private static int longestCommonSubseq(String s1, String s2) {
+        int[][] dp = new int[s1.length()][s2.length()];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+        return LCSHelper(0, 0, s1, s2, dp);
+    }
+
+    private static int LCSHelper(int i, int j, String s1, String s2, int[][] dp) {
+        //base case
+        if (i >= s1.length() || j >= s2.length())
+            return 0;
+
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        if (s1.charAt(i) == s2.charAt(j)) {
+            dp[i][j] = 1 + LCSHelper(i + 1, j + 1, s1, s2, dp);
+            return dp[i][j];
+        }
+
+        //s1.charAt(i) != s2.charAt(j)
+        dp[i][j] = Math.max(LCSHelper(i+1, j, s1, s2, dp), LCSHelper(i, j+1, s1, s2, dp));
+        return dp[i][j];
+    }
+
+    private static int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> list = new ArrayList<>();
+        return lengthOfLISHelper(0, nums, list);
+    }
+
+    private static int lengthOfLISHelper(int i, int[] nums, ArrayList<Integer> list) {
+        //base case
+        if (i == nums.length)
+            return list.size();
+
+
+        //take -> if it can be taken
+        int take = Integer.MIN_VALUE;
+        if (list.size() == 0 || list.get(list.size()-1) < nums[i]) {
+            list.add(nums[i]);
+            take = lengthOfLISHelper(i+1, nums, list);
+
+            //remove the last added element
+            list.remove(list.size()-1);
+        }
+
+        //dont take
+        int dontTake = lengthOfLISHelper(i+1, nums, list);
+        return Math.max(take, dontTake);
+    }
+
+    private static boolean isValidParentheses(String s) {
+        return parenthesesHelper(0, s, new Stack<>());
+    }
+
+    private static boolean parenthesesHelper(int i, String s, Stack<Character> stack) {
+        //base case
+        if (i == s.length())
+            return stack.isEmpty();
+
+
+        if (s.charAt(i) == ')'){
+            if (stack.peek() != '(')
+                return false;
+            stack.pop();
+
+            if (parenthesesHelper(i+1, s, stack))
+                return true;
+        }
+
+
+        if (s.charAt(i) == '*'){
+            stack.push('(');
+           if (parenthesesHelper(i+1, s, stack))
+               return true;
+           stack.pop();
+
+           if (parenthesesHelper(i+1, s, stack))
+               return true;
+           stack.pop();
+
+           stack.push(')');
+           if (parenthesesHelper(i+1, s, stack))
+               return true;
+           stack.pop();
+        }else { // s.charAt(i) == '('
+            stack.push('(');
+            if (parenthesesHelper(i+1, s, stack))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static List<Integer> partitionLabels(String s) {
+        //build a hashmap with Character, its last index occurrence
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            map.put(c, i);
+        }
+
+        List<Integer> res = new ArrayList<>();
+        int end = 0, size = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            //update the end and increment size
+            end = Math.max(end, map.get(c));
+            size += 1;
+
+            //if we have reached the end of the window
+            if (i == end){
+                res.add(size);
+                size = 0;
+            }
+        }
+
+        return res;
+    }
+
+    private static boolean isNStraightHand(int[] hand, int groupSize) {
+        if (hand.length % groupSize != 0)
+            return false;
+
+        //build a hashmap
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int num: hand)
+            map.put(num, map.getOrDefault(num, 0) + 1);
+
+        //take the keys from the map, and construct a MinHeap
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>(map.keySet());
+
+        while (!minHeap.isEmpty()){
+            int first = minHeap.peek();
+
+            for (int i = first; i < first+groupSize; i++) {
+                if (!map.containsKey(i))
+                    return false;
+
+                //decrement its count
+                map.put(i, map.get(i)-1);
+
+                if (map.get(i) == 0){
+                    if (minHeap.peek() != i)
+                        return false;
+                    minHeap.poll();
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static int minJumps(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, -1);
+        return minJumpHelper(0, nums, dp);
+    }
+
+    private static int minJumpHelper(int i, int[] nums, int[] dp) {
+        //base case
+        if (i >= nums.length-1)
+            return 0;
+
+        if (dp[i] != -1)
+            return dp[i];
+
+        int maxJump = nums[i], min = (int) 1e9;
+        for (int j = maxJump; j > 0; j--) {
+            int jump = minJumpHelper(i + j, nums, dp);
+            min = Math.min(min, jump);
+        }
+
+        dp[i] = min+1;
+        return min+1;
+    }
+
+    private static boolean jumpGame(int[] nums) {
+        int[] visited = new int[nums.length];
+        Arrays.fill(visited, -1);
+        return jumpHelper(0, nums, visited) == 1;
+    }
+
+    private static int jumpHelper(int i, int[] nums, int[] visited) {
+        //base case
+        if (i >= nums.length-1)
+            return 1;
+
+        if (visited[i] != -1)
+            return visited[i];
+        System.out.println("i = " + i);
+
+        int curMaxJump = nums[i];
+        for (int j = curMaxJump; j > 0; j--) {
+            int canJump = jumpHelper(i + j, nums, visited);
+
+            if (canJump == 1) {
+                visited[i] = 1;
+                return 1;
+            }
+        }
+
+        visited[i] = 0;
+        return 0;
+    }
+
+    private static int[][] kClosestPoints(int[][] points, int k) {
+
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>(
+                (a, b) -> (a[0]*a[0] + a[1]*a[1]) - (b[0]*b[0] + b[1]*b[1]));
+        Collections.addAll(minHeap, points);
+
+        int[][] res = new int[k][2];
+        for (int i = 0; i < k; i++) {
+            res[i] = minHeap.poll();
+        }
+        System.out.println(Arrays.deepToString(res));
+        return res;
+    }
+
+    private static int totalGoodNodes(TreeNode<Integer> root) {
+        return helperGoodNodes(root, root.data);
+    }
+
+    private static int helperGoodNodes(TreeNode<Integer> root, int max) {
+        //base case
+        if (root == null)
+            return 0;
+
+        int count = 0;
+        if (root.data >= max) {
+            count++;
+            max = root.data;
+        }
+
+        count += helperGoodNodes(root.left, max);
+        count += helperGoodNodes(root.right, max);
+        return count;
+    }
+
+    private static int searchInRotatedSortedArr(int[] nums, int target) {
+        //we will use somewhat modified Binary search here
+        int l = 0, r = nums.length-1;
+
+        while (l <= r){
+            int mid = (l+r)/2;
+            if (nums[mid] == target)
+                return mid;
+
+            if (target < nums[mid]){
+                if (target < nums[l])
+                    l = mid+1;
+                else
+                    r = mid-1;
+            }else //target > nums[mid]
+                if (nums[r] <= target)
+                    l = mid+1;
+                else
+                    r = mid-1;
+            }
+            return -1;
+        }
+
+    private static int findMinRotatedSortedArray(int[] nums) {
+        int l = 0, r = nums.length-1;
+        int res = nums[0];
+
+        while (l <= r){
+            int mid = (l+r)/2;
+            res = Math.min(res, nums[mid]);
+
+            if (nums[mid] <= nums[r]) //search in left
+                r = mid-1;
+            else //nums[mid] > nums[e], mtlb sorted portion is in right
+                l = mid+1;
+        }
+        return res;
+    }
+
+    //we want to find the min no.of bananas 'Koko' can eat, such that it can finish all bananas within h hours
+    private static int minEatingSpeed(int[] piles, int h) {
+        int e = maxInPiles(piles); //so koko can eat 'max' no. of bananas
+        int s = 1; //minimum no. of bananas
+
+        int mid, res = e;
+        while (s <= e){
+            mid = (s+e)/2;
+
+            //lets calculate how many hours it'd take if Koko eats mid.no of bananas each hour
+            int hours = calculateHours(piles, mid);
+
+            if (hours <= h){
+                res = Math.min(res, mid);
+                e = mid-1;
+            }else //hours > h, means Koko would be need to eat more no.of bananas
+                s = mid+1;
+        }
+
+        return res;
+    }
+
+    private static int calculateHours(int[] piles, int mid) {
+        int hours = 0;
+        for (int pile: piles)
+            hours += (int) Math.ceil((double) pile/mid);
+        return hours;
+    }
+
+    private static int maxInPiles(int[] piles) {
+        int max = -1;
+        for (int pile: piles)
+            max = Math.max(max, pile);
+        return max;
+    }
+
+    private static int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] ans = new int[n];
+
+        Stack<Integer> stack = new Stack<>();//to store the indices
+        for (int i = n-1; i >= 0; i--) {
+            int curTemp = temperatures[i];
+
+            //remove the temperatures which is less than the current temperature
+            while (!stack.isEmpty() && curTemp >= temperatures[stack.peek()])
+                stack.pop();
+
+            if (!stack.isEmpty())
+                ans[i] = stack.peek() - i;
+
+            stack.push(i);
+        }
+//        System.out.println(Arrays.toString(ans));
+        return ans;
+    }
+
+    static List<String> res = new ArrayList<>();
+    private static List<String> generateParentheses(int n) {
+        helperGenerateParentheses(0, 0, "", n);
+        return res;
+    }
+
+    private static void helperGenerateParentheses(int open, int close, String cur, int n) {
+        //base case
+        if (open == n && close == n) {
+            res.add(cur);
+            return;
+        }
+
+        if (open < n)
+            helperGenerateParentheses(open+1, close, cur+"(", n);
+
+        if (close < open)
+            helperGenerateParentheses(open, close+1, cur+")", n);
+    }
+
+    //return the min window substring of s
+    private static String minWindowSubstring(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        HashMap<Character, Integer> map1 = new HashMap<>(),
+                                    map2 = new HashMap<>();
+        for (int i = 0; i < t.length(); i++)
+            map1.put(t.charAt(i), map1.getOrDefault(t.charAt(i), 0) + 1);
+
+        int l = 0, r = 0;
+        while (r < s.length()){
+            map2.put(s.charAt(r), map2.getOrDefault(s.charAt(r), 0) + 1);
+            r++;
+        }
+        r--; // r is at the end of String s
+
+
+        while (l < s.length()){
+            char c = s.charAt(l);
+
+            if (map1.containsKey(c)){
+                if (map2.get(c) > map1.get(c))
+                    map2.put(c, map2.get(c) - 1);
+                else if (map2.get(c) == map1.get(c))
+                    break;
+            }else
+                map2.remove(c);
+
+            l++;
+        }
+
+        //time to decrement r
+        while (r >= l){
+            char c = s.charAt(r);
+
+            if (map1.containsKey(c)){
+                if (map2.get(c) > map1.get(c))
+                    map2.put(c, map2.get(c) - 1);
+                else if (map2.get(c) == map1.get(c))
+                    break;
+            }
+
+            r--;
+        }
+//        System.out.println(l + ", " + r);
+        return s.substring(l, r+1);
+    }
+
+    private static boolean checkInclusion(String s1, String s2) {
+        if (s2.length() < s1.length())
+            return false;
+
+        HashMap<Character, Integer> map1 = new HashMap<>(),
+                                    map2 = new HashMap<>();
+
+        for (int i = 0; i < s1.length(); i++)
+            map1.put(s1.charAt(i), map1.getOrDefault(s1.charAt(i), 0) + 1);
+
+        for (int i = 0; i < s1.length(); i++)
+            map2.put(s2.charAt(i), map2.getOrDefault(s2.charAt(i), 0) + 1);
+
+
+        int l = 0, r = s1.length()-1;
+        while (r < s2.length()){
+            if (map1.equals(map2))
+                return true;
+
+            if (map2.get(s2.charAt(l)) == 1)
+                map2.remove(s2.charAt(l));
+            else
+                map2.put(s2.charAt(l), map2.get(s2.charAt(l)) - 1);
+            l++; r++;
+
+
+            if (r < s2.length())
+                map2.put(s2.charAt(r), map2.getOrDefault(s2.charAt(r), 0) + 1);
+        }
+        return false;
+    }
+
+
+    private static int totalPalindromicSubstrings(String s) {
+        int n = s.length();
+        int dp[][] = new int[n][n];
+
+        int palindromeCount = 0;
+        //make the diagonals 1, as a string of length 1 is a valid Palindrome
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = 1;
+            palindromeCount++;
+        }
+
+        int k = n-1, l = 1;
+        int i, j; //i & j are actual pointers for the string
+        while (k >= 0){
+            i = 0; j = l;
+
+            while (i < k && j < n){
+                if (s.charAt(i) == s.charAt(j)){
+                    if (j-i == 1 || dp[i+1][j-1] == 1) {
+                        dp[i][j] = 1;
+                        palindromeCount++;
+                    }
+                }
+
+                i++; j++;
+            }
+
+            k--;
+            l++;
+        }
+
+        return palindromeCount;
+    }
+
+    private static int maxProductSubArray(int[] nums) {
+        int curMax = 1, curMin = 1;
+        int res = 0;
+
+        for (int n: nums){
+
+            int temp = n*curMax;
+            curMax = Math.max(n, Math.max(n*curMax, n*curMin));
+            curMin = Math.min(n, Math.min(temp, n*curMin));
+
+            System.out.println("curMax = " + curMax + ", CurMin = " + curMin);
+            res = Math.max(res, curMax);
+        }
+        return res;
+    }
+
+    private static int minCoinChange(int[] coins, int amount) {
+        int[][] dp = new int[coins.length][amount+1];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        int ans = coinHelper(coins, 0, amount, dp);
+        return ans != (int) 1e9 ? ans : -1;
+    }
+
+    private static int coinHelper(int[] coins, int i, int amount, int[][] dp) {
+        //base case
+        if (amount < 0) return (int) 1e9;
+        if (i == coins.length-1)
+            if (amount % coins[i] == 0)
+                return amount/coins[i];
+            else
+                return (int) 1e9;
+
+        if (amount == 0)
+            return 0;
+        if (dp[i][amount] != -1)
+            return dp[i][amount];
+
+
+        //take this coin
+        int take = 1 + coinHelper(coins, i, amount-coins[i], dp);
+        //dont take this coin
+        int notTake = coinHelper(coins, i+1, amount, dp);
+
+        dp[i][amount] = Math.min(take, notTake);
+        return Math.min(take, notTake);
     }
 
     private static String longestPalindromeSubstring(String s) {
