@@ -231,11 +231,181 @@ public class Main {
 //                coinsCombinations(coins, 5));
 
 //        todo https://leetcode.com/problems/interleaving-string/
-        String s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc";
-        System.out.println("Is Interleave: " + isInterleave(s1, s2, s3));
+//        String s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc";
+//        System.out.println("Is Interleave: " + isInterleave(s1, s2, s3));
+
+//        todo https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
+//        int[][] matrix = {{9,9,4},{6,6,8},{2,1,1}};
+//        System.out.println("Longest Increasing Path: " + longestIncreasingPath(matrix));
+
+//        todo https://leetcode.com/problems/distinct-subsequences/
+//        String s = "babgbag", t = "bag";
+//        System.out.println("Distinct Subsequences: " + distinctSubSeqs(s, t));
+
+//        todo https://leetcode.com/problems/insert-interval/
+//        int[][] intervals = {{1,3}, {6,9}};
+//        int[] newInterval = {2,5};
+//        insertInterval(intervals, newInterval);
+
+//        todo https://leetcode.com/problems/merge-intervals/
+//        int[][] intervals = {{1,3},{8,10},{2,6},{10,18}};
+//        mergeIntervals(intervals);
+
+//        todo https://www.lintcode.com/problem/920/
+        int[][] intervals = {{7,10}, {2,4}};
+//        System.out.println("Can attend all meetings: " +
+//                canAttendAllMeetings(intervals));
+
+//        todo https://www.lintcode.com/problem/919/
+//        minMeetingRooms(intervals);
 
 
 
+    }
+
+    private static int minMeetingRooms(int[][] intervals) {
+        //sort them wrt start time
+        Arrays.sort(intervals, (a1, a2) -> a1[0] - a2[0]);
+
+        int end = intervals[0][1];
+        int rooms = 0;
+
+        for (int[] interval: intervals){
+
+            if (interval[0] < end) {
+                rooms += 1;
+
+                end = Math.min(end, interval[1]);
+            }else { //interval[0] > end -> no overlapping
+                //no extra room needed
+                end = interval[1];
+            }
+        }
+
+//        System.out.println("rooms = " + rooms);
+        return rooms;
+    }
+
+    private static boolean canAttendAllMeetings(int[][] intervals) {
+        int start = intervals[0][0], end = intervals[0][1];
+
+        for (int i = 1; i < intervals.length; i++) {
+            int[] interval = intervals[i];
+
+            if (interval[0] < end)
+                return false;
+
+            start = interval[0];
+            end = interval[1];
+        }
+        return true;
+    }
+
+    private static int[][] mergeIntervals(int[][] intervals) {
+        List<int[]> res = new ArrayList<>();
+
+        //sort the intervals in ASC order
+        Arrays.sort(intervals, (arr1, arr2) -> arr1[0] - arr2[0]);
+
+        int start = intervals[0][0], end = intervals[0][1];
+        for (int[] interval: intervals){
+
+            if (interval[0] <= end)
+                end = Math.max(end, interval[1]);
+            else if (end < interval[0]){
+                //add s,e
+                res.add(new int[]{start, end});
+                start = interval[0];
+                end = interval[1];
+            }
+        }
+
+        res.add(new int[]{start, end});
+//        for (int[] arr: res)
+//            System.out.print(Arrays.toString(arr) + " ");
+        return res.toArray(new int[res.size()][]);
+    }
+
+    private static int[][] insertInterval(int[][] intervals, int[] newInterval) {
+        List<int[]> res = new ArrayList<>();
+
+        for (int[] interval: intervals){
+
+            //1. newInterval baadme, matlab right me hoga current Interval k
+            if (newInterval == null || newInterval[0] > interval[1])
+                res.add(interval);
+            //2. newInterval pehle hoga, so insert karlo
+            else if (newInterval[1] < interval[0]){
+                res.add(newInterval); //new Interval is added!
+                res.add(interval);
+                newInterval = null;
+            }else { //overlapping
+                newInterval[0] = Math.min(newInterval[0], interval[0]);
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            }
+        }
+
+        if (newInterval != null)
+            res.add(newInterval);
+        return res.toArray(new int[res.size()][]);
+    }
+
+    private static int distinctSubSeqs(String s, String t) {
+        return dfs(0, s, t, "");
+    }
+
+    private static int dfs(int ind, String s, String t, String cur) {
+        //base case
+        if (cur.equals(t))
+            return 1;
+        if (ind >= s.length())
+            return 0;
+
+        if (cur.length() >= t.length()) //no point in checking further, e.g cur -> "bab"
+            return 0;
+
+        int take = dfs(ind+1, s, t, cur+s.charAt(ind));
+        int skip = dfs(ind+1, s, t, cur);
+        return take + skip;
+    }
+
+    private static int longestIncreasingPath(int[][] matrix) {
+        int rows = matrix.length, cols = matrix[0].length;
+
+        int[][] dp = new int[rows][cols];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        int maxLength = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (dp[i][j] == -1)
+                    maxLength = Math.max(maxLength, dfs(i, j, matrix, -1, dp));
+            }
+        }
+
+        return maxLength;
+    }
+
+    private static int dfs(int r, int c, int[][] matrix, int prevValue, int[][] dp) {
+        //base case
+        if (r >= matrix.length ||
+            c >= matrix[0].length ||
+            r < 0 || c < 0 ||
+            matrix[r][c] <= prevValue)
+            return 0;
+
+        if (dp[r][c] != -1)
+            return dp[r][c];
+
+        int res = 1, parent = matrix[r][c];
+        res = Math.max(res, 1 + dfs(r, c+1, matrix, parent, dp));
+        res = Math.max(res, 1+ dfs(r, c-1, matrix, parent, dp));
+        res = Math.max(res, 1 + dfs(r+1, c, matrix, parent, dp));
+        res = Math.max(res, 1+ dfs(r-1, c, matrix, parent, dp));
+
+        dp[r][c] = res;
+        return res;
     }
 
     private static boolean isInterleave(String s1, String s2, String s3) {
