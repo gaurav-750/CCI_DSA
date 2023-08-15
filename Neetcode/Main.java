@@ -1,9 +1,7 @@
-package Blind75_Neetcode;
+package Neetcode;
 
-import java.lang.annotation.Target;
 import java.util.*;
 
-import BinaryTrees.BinaryTree;
 import BinaryTrees.TreeNode;
 import LinkedList.Node;
 
@@ -259,8 +257,320 @@ public class Main {
 //        todo https://www.lintcode.com/problem/919/
 //        minMeetingRooms(intervals);
 
+//        todo https://leetcode.com/problems/spiral-matrix/
+        int[][] matrix = {{5,1,9,11},{2,4,8,10},{13,3,6,7},{15,14,12,16}};
+//        spiralMatrix(matrix);
+
+//        todo https://leetcode.com/problems/set-matrix-zeroes/description/
+//        setMatrixZeroes(matrix);
+
+//        todo https://leetcode.com/problems/plus-one/
+//        int[] arr = {9};
+//        System.out.println("Plus One: " + Arrays.toString(plusOne(arr)));
+
+//        todo https://leetcode.com/problems/rotate-image/
+//        rotateImage(matrix);
+
+//        todo https://leetcode.com/problems/valid-sudoku/
+        char[][] board =
+//                {{'8','3','.','.','7','.','.','.','.'}
+//                ,{'6','.','.','1','9','5','.','.','.'}
+//                ,{'.','9','8','.','.','.','.','6','.'}
+//                ,{'8','.','.','.','6','.','.','.','3'}
+//                ,{'4','.','.','8','.','3','.','.','1'}
+//                ,{'7','.','.','.','2','.','.','.','6'}
+//                ,{'.','6','.','.','.','.','2','8','.'}
+//                ,{'.','.','.','4','1','9','.','.','5'}
+//                ,{'.','.','.','.','8','.','.','7','9'}};
+                {{'3','.','.','.','.','4','.','.','.'},
+                {'.','.','.','.','1','.','8','.','.'},
+                {'.','7','2','.','.','.','.','.','.'},
+                {'.','.','5','.','.','.','.','.','.'},
+                {'.','4','.','.','.','.','.','.','.'},
+                {'.','.','.','.','.','.','3','.','.'},
+                {'.','.','.','.','.','.','.','.','1'},
+                {'1','3','.','.','.','5','.','.','.'},
+                {'.','.','.','.','5','.','.','2','.'}};
+//        System.out.println("Is Valid Sudoku: " + isValidSudoku(board));
+
+//        todo https://leetcode.com/problems/brick-wall/
+//        int[][] wall = {{1,2,2,1},{3,1,2},{1,3,2},{2,4},{3,1,2},{1,3,1,1}};
+//        System.out.println("Least bricks to cross: " + leastBricks(wall));
+
+//        todo https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+//        int[] prices = {7,1,5,3,6,4};
+//        System.out.println("Max Profit: " + maxProfit2(prices));
+
+//        todo https://leetcode.com/problems/subarray-sum-equals-k/
+//        nums = new int[]{1,-1,1,1,1,1};
+//        System.out.println("Total Sub Arrays: " + subArrays(nums, 3));
+
+//        todo https://leetcode.com/problems/unique-length-3-palindromic-subsequences/
+        countPalindromicSubsequence("aabca");
 
 
+    }
+
+    private static int countPalindromicSubsequence(String s) {
+
+        
+
+
+    }
+
+    //this is a very optimized approach
+    private static int subArrays(int[] nums, int k) {
+        int totalSubArrays = 0, curSum = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+             // prefixSum, count
+        map.put(0, 1);
+
+        for (int num: nums){
+            curSum += num;
+            int diff = curSum- k;
+
+            if (map.containsKey(diff))
+                totalSubArrays += map.get(diff);
+
+            map.put(curSum, map.getOrDefault(curSum, 0) + 1);
+//            System.out.println(map);
+        }
+        return totalSubArrays;
+    }
+
+    private static int maxProfit2(int[] prices) {
+        int[][] dp = new int[prices.length+1][2];
+        for (int[] arr: dp)
+            Arrays.fill(arr, -1);
+
+        return profitHelper(0, 1, prices, dp);
+    }
+
+    private static int profitHelper(int ind, int buy, int[] prices, int[][] dp) {
+        //base case
+        if (ind >= prices.length)
+            return 0;
+
+        if (dp[ind][buy] != -1)
+            return dp[ind][buy];
+
+        int totalProfit = 0;
+        if (buy == 1){
+            //buy (or) skip
+            int buyKiya = -prices[ind] + profitHelper(ind+1, 0, prices, dp);
+            int skipKiya = profitHelper(ind+1, 1, prices, dp);
+            totalProfit = Math.max(buyKiya, skipKiya);
+        }else {
+            //sell or skip
+            int sellKiya = prices[ind] + profitHelper(ind+1, 1, prices, dp);
+            int skipKiya = profitHelper(ind+1, 0, prices, dp);
+            totalProfit = Math.max(sellKiya, skipKiya);
+        }
+
+        dp[ind][buy] = totalProfit;
+        return totalProfit;
+    }
+
+    private static int leastBricks(int[][] wall) {
+        HashMap<Integer, Integer> gaps = new HashMap<>();
+               //width,   gapCount
+
+        for (int[] layer : wall) {
+            int sum = 0;
+            for (int i = 0; i < layer.length-1; i++) {
+                sum += layer[i];
+                gaps.put(sum, gaps.getOrDefault(sum, 0) + 1);
+            }
+        }
+
+        //get the maximum gap
+        int maxGap = 0;
+        for (int gap: gaps.values())
+            maxGap = Math.max(maxGap, gap);
+
+        return wall.length - maxGap;
+    }
+
+    private static boolean isValidSudoku(char[][] board) {
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.')
+                    continue;
+
+                if (inRow(i, j, board) || inCol(i, j, board) ||
+                    inSubBoard(i, j, board)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean inSubBoard(int i, int j, char[][] board) {
+        int k = (i/3) * 3,
+            l = (j/3) * 3;
+        char c = board[i][j];
+
+        for (int a = k; a < k+3; a++) {
+            for (int b = l; b < l+3; b++) {
+                if (a == i && b == j) continue;
+                if (board[a][b] == c)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean inCol(int i, int j, char[][] board) {
+        char c = board[i][j];
+        for (int k = 0; k < 9; k++) {
+            if (k == i) continue; //dont the the same character
+            if (board[k][j] == c)
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean inRow(int i, int j, char[][] board) {
+        char c = board[i][j];
+        for (int k = 0; k < 9; k++) {
+            if (k == j) continue; //dont the the same character
+            if (board[i][k] == c)
+                return true;
+        }
+        return false;
+    }
+
+    private static void rotateImage(int[][] mat) {
+        int left = 0, right = mat.length-1;
+
+        while (left < right){ //will run n/2 times
+
+            for (int i = 0; i < (right-left); i++) {
+                int top = left, bottom = right;
+
+                //save the top left
+                int topLeft = mat[top][left + i];
+
+                //move bottom left -> top left
+                mat[top][left + i] = mat[bottom - i][left];
+
+                //move bottom right -> bottom left
+                mat[bottom - i][left] = mat[bottom][right - i];
+
+                //move top right -> bottom right
+                mat[bottom][right - i] = mat[top + i][right];
+
+                //move top left -> top right
+                mat[top + i][right] = topLeft;
+            }
+
+            left += 1;
+            right -= 1;
+        }
+
+        System.out.println(Arrays.deepToString(mat));
+    }
+
+    private static int[] plusOne(int[] arr) {
+        int n = arr.length;
+        if (arr[n-1] < 9){
+            arr[n-1] = arr[n-1] + 1;
+            return arr;
+        }
+
+        // that means the last digit is '9'
+        int carry = 1, i = n-1, sum;
+        while (i >= 0){
+            sum = arr[i] + carry;
+
+            if (sum == 10) {
+                arr[i] = 0;
+            }else { //sum < 10
+                arr[i] = sum;
+                return arr;
+            }
+            i -= 1;
+        }
+
+
+        //carry bacha hai
+        int[] res = new int[n+1];
+        res[0] = 1;
+        for (int j = 1; j < res.length; j++)
+            res[j] = arr[j-1];
+        return res;
+    }
+
+    private static void setMatrixZeroes(int[][] mat) {
+        int r = mat.length, c = mat[0].length;
+        int[] rows = new int[r],
+              cols = new int[c];
+
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (mat[i][j] == 0){
+                    rows[i] = 1;
+                    cols[j] = 1;
+                }
+            }
+        }
+
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (rows[i] == 1)
+                    mat[i][j] = 0;
+                if (cols[j] == 1)
+                    mat[i][j] = 0;
+            }
+        }
+    }
+
+    private static List<Integer> spiralMatrix(int[][] mat) {
+        int top = 0, bottom = mat.length-1,
+            left = 0, right = mat[0].length-1;
+        List<Integer> res = new ArrayList<>();
+
+        while (top <= bottom && left <= right){
+            //top
+            int x = left;
+            while (x <= right){
+                res.add(mat[top][x]);
+                x++;
+            }
+            top += 1;
+            if (top > bottom)
+                break;
+
+            //right
+            x = top;
+            while (x <= bottom){
+                res.add(mat[x][right]);
+                x++;
+            }
+            right -= 1;
+            if (right < left)
+                break;
+
+            x = right;
+            //bottom
+            while (x >= left){
+                res.add(mat[bottom][x]);
+                x--;
+            }
+            bottom -= 1;
+
+            x = bottom;
+            //left
+            while (x >= top){
+                res.add(mat[x][left]);
+                x--;
+            }
+            left += 1;
+        }
+        System.out.println(res);
+        return res;
     }
 
     private static int minMeetingRooms(int[][] intervals) {
@@ -287,15 +597,13 @@ public class Main {
     }
 
     private static boolean canAttendAllMeetings(int[][] intervals) {
-        int start = intervals[0][0], end = intervals[0][1];
+        int end = intervals[0][1];
 
         for (int i = 1; i < intervals.length; i++) {
             int[] interval = intervals[i];
-
             if (interval[0] < end)
                 return false;
 
-            start = interval[0];
             end = interval[1];
         }
         return true;
