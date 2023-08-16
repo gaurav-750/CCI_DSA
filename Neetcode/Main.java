@@ -193,7 +193,7 @@ public class Main {
 //        kClosestPoints(points, k);
 
 //        todo https://leetcode.com/problems/jump-game/
-        int[] nums = {2,3,1,1,4};
+//        int[] nums = {2,3,1,1,4};
 //        System.out.println("Can Jump: " + jumpGame(nums));
 
 //        todo https://leetcode.com/problems/jump-game-ii/
@@ -306,16 +306,141 @@ public class Main {
 //        System.out.println("Total Sub Arrays: " + subArrays(nums, 3));
 
 //        todo https://leetcode.com/problems/unique-length-3-palindromic-subsequences/
-        countPalindromicSubsequence("aabca");
+//        System.out.println("Unique Palindromes of length 3: " +
+//                countPalindromicSubsequence("aabca"));
+
+//        todo https://leetcode.com/problems/minimum-number-of-swaps-to-make-the-string-balanced/
+//        System.out.println("Min Swaps: " + minSwaps("]]][[["));
+
+//        todo https://leetcode.com/problems/find-all-anagrams-in-a-string/
+//        String s = "cbaebabacd", p = "abc";
+//        allAnagrams(s, p);
+
+//        todo https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/
+//        String haystack = "mississippi", needle = "issipi";
+//        System.out.println("First Occurrence: " +
+//                firstOccurrence(haystack, needle));
+
+//        todo https://leetcode.com/problems/largest-number/
+        int[] nums = {34,3,30,9,5};
+        largestNumber(nums);
+
 
 
     }
 
+    private static String largestNumber(int[] nums) {
+        //convert this int nums array to a String array:
+        String[] numbers = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            numbers[i] = String.valueOf(nums[i]);
+        }
+
+        //sort this array
+        Arrays.sort(numbers);
+
+        //[3, 30, 34, 5, 9]
+        String res = "";
+        for (int i = numbers.length-1; i >= 0; i--)
+            res += numbers[i];
+        return res;
+    }
+
+    private static int firstOccurrence(String s, String p) {
+        if (p.length() > s.length())
+            return -1;
+
+        int i = 0;
+        while (i < s.length()){
+            if (s.charAt(i) == p.charAt(0)){
+                //this is a possible answer
+                int j = i, k = 0;
+                while (j < s.length() && k < p.length()){
+                    if (s.charAt(j) != p.charAt(k))
+                        break;
+                    j++; k++;
+                }
+
+                if (k == p.length())//the complete string is traversed, that means we've found our solution
+                    return i;
+            }
+            i++;
+        }
+
+        return -1;
+    }
+
+    private static List<Integer> allAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList<>();
+        if (p.length() > s.length())
+            return res;
+
+        HashMap<Character, Integer> pCount = new HashMap<>(),
+                                    sCount = new HashMap<>();
+
+        for (int i = 0; i < p.length(); i++) {
+            pCount.put(p.charAt(i), pCount.getOrDefault(p.charAt(i), 0) + 1);
+            sCount.put(s.charAt(i), sCount.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        if (pCount.equals(sCount))
+            res.add(0);
+
+        int l = 0;
+        for (int r = p.length(); r < s.length(); r++) {
+            //add the character at 'r'
+            sCount.put(s.charAt(r), sCount.getOrDefault(s.charAt(r), 0) + 1);
+
+            //decrement the count of char at 'l'
+            sCount.put(s.charAt(l), sCount.get(s.charAt(l)) - 1);
+            if (sCount.get(s.charAt(l)) == 0)//if the count is 0, remove from HashMap
+                sCount.remove(s.charAt(l));
+            l += 1;
+
+            if (pCount.equals(sCount))
+                res.add(l);
+        }
+        return res;
+    }
+
+    private static int minSwaps(String s) {
+        int close = 0, maxClose = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ']')
+                close++;
+            else // '['
+                close--;
+
+            maxClose = Math.max(close, maxClose);
+        }
+
+        return (int) Math.ceil(maxClose/2.0);
+    }
+
     private static int countPalindromicSubsequence(String s) {
+        //store the start and end of every char in the string s
+        int[][] indexes = new int[26][2];
+        for (int[] arr: indexes)
+            Arrays.fill(arr, -1);
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (indexes[c - 'a'][0] == -1) {
+                indexes[c - 'a'][0] = i;
+            }
+            indexes[c - 'a'][1] = i;
+        }
 
-        
+        int totalPalindromeOfLen3 = 0;
+        //we have got the s and e index of every character now
+        //now we'll see how many unique characters are present between start & end of them
+        for (int i = 0; i < 26; i++) {
+            int start = indexes[i][0], end = indexes[i][1];
+            HashSet<Character> uniqueChars = new HashSet<>();
 
-
+            for (int j = start+1; j < end; j++)
+                uniqueChars.add(s.charAt(j));
+            totalPalindromeOfLen3 += uniqueChars.size();
+        }
+        return totalPalindromeOfLen3;
     }
 
     //this is a very optimized approach
