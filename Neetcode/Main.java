@@ -1,5 +1,6 @@
 package Neetcode;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import BinaryTrees.TreeNode;
@@ -322,28 +323,65 @@ public class Main {
 //                firstOccurrence(haystack, needle));
 
 //        todo https://leetcode.com/problems/largest-number/
-        int[] nums = {34,3,30,9,5};
-        largestNumber(nums);
+//        int[] nums = {1,2,3,4,5,6,7,8,9,0};
+//        System.out.println("Largest Number: " + largestNumber(nums));
+
+//        todo https://leetcode.com/problems/continuous-subarray-sum/
+        int[] nums = {23,2,6,4,7};
+        System.out.println("Subarray: " + checkSubarraySum(nums, 13));
+
 
 
 
     }
 
+    private static boolean checkSubarraySum(int[] nums, int k) {
+        int sum = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+                // remainder, index
+
+        map.put(0, -1); //for handling base case. e.g [23,2,4,6,6];
+        for (int i = 0; i < nums.length; i++){
+            sum += nums[i];
+            int rem = sum%k;
+
+            if (map.containsKey(rem)){
+                //that means remainder is repeating
+                //check if subarray length >= 2
+                if (i - map.get(rem) >= 2)
+                    return true;
+            }else {
+                map.put(rem, i);
+            }
+//            System.out.println(map);
+        }
+        return false;
+    }
+
     private static String largestNumber(int[] nums) {
         //convert this int nums array to a String array:
         String[] numbers = new String[nums.length];
-        for (int i = 0; i < nums.length; i++) {
+        for (int i = 0; i < nums.length; i++)
             numbers[i] = String.valueOf(nums[i]);
-        }
 
         //sort this array
-        Arrays.sort(numbers);
+        //but this is not a normal sort. We have to compare 2 strings:
+        //eg. "3" & "30" => "330" or "303". So we'd add both the strings a+b, b+a and then compare them
+        Arrays.sort(numbers, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                String num1 = s1+s2, num2 = s2+s1;
+                return num1.compareTo(num2);//comparing strings lexicographically
+            }
+        });
+//        System.out.println(Arrays.toString(numbers));
+        if (numbers[numbers.length-1].equals("0"))//base case
+            return "0";
 
-        //[3, 30, 34, 5, 9]
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int i = numbers.length-1; i >= 0; i--)
-            res += numbers[i];
-        return res;
+            res.append(numbers[i]);
+        return res.toString();
     }
 
     private static int firstOccurrence(String s, String p) {
