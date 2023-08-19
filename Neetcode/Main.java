@@ -328,10 +328,37 @@ public class Main {
 
 //        todo https://leetcode.com/problems/continuous-subarray-sum/
         int[] nums = {23,2,6,4,7};
-        System.out.println("Subarray: " + checkSubarraySum(nums, 13));
+//        System.out.println("Subarray: " + checkSubarraySum(nums, 13));
+
+//        pattern(3, 5);
 
 
 
+    }
+
+    private static void pattern(int start, int n){
+
+        for (int i = 1; i <= n; i++) {
+            int j = 0;
+            while (j < i){
+                System.out.print(start + " ");
+                j++;
+            }
+            System.out.println();
+
+            start += 1;
+        }
+        start -= 1;
+        for (int i = n; i > 0; i--) {
+            int j = 0; //i = 4,3,2,1
+            while (j < i){
+                System.out.print(start + " ");
+                j++;
+            }
+            System.out.println();
+
+            start -= 1;
+        }
 
     }
 
