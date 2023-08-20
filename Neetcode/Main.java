@@ -327,13 +327,35 @@ public class Main {
 //        System.out.println("Largest Number: " + largestNumber(nums));
 
 //        todo https://leetcode.com/problems/continuous-subarray-sum/
-        int[] nums = {23,2,6,4,7};
+        int[] nums = {23,2,6,4,7,8};
 //        System.out.println("Subarray: " + checkSubarraySum(nums, 13));
 
 //        pattern(3, 5);
 
 
+        findThirdLargest(nums);
 
+
+
+    }
+
+    private static int findThirdLargest(int[] nums) {
+        int max = -1, secondMax = -1, thirdMax = -1;
+
+        for (int num: nums){
+            if (num > max) {
+                thirdMax = secondMax;
+                secondMax = max;
+                max = num;
+            }
+            if (num > secondMax && num < max) {
+                thirdMax = secondMax;
+                secondMax = num;
+            }
+            if (num > thirdMax && num < secondMax)
+                thirdMax = num;
+        }
+        return thirdMax;
     }
 
     private static void pattern(int start, int n){
